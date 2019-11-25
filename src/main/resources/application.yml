@@ -1,0 +1,35 @@
+server:
+  port: 8081
+
+spring:
+  # 数据源
+  datasource:
+    url: jdbc:mysql://localhost:8090/springboot?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123
+    max-active: 10
+    initial-size: 1
+    max-wait: 60000
+    min-idle: 1
+    time-between-eviction-runs-millis: 60000
+    min-evictable-idle-time-millis: 300000
+    validation-query: select 1
+    test-while-idle: true
+    test-on-borrow: true
+    test-on-return: true
+    pool-prepared-statements: true
+    max-open-prepared-statements: 10
+    hikari:
+      # ebean 托管事物提交，这里需要关闭自动提交
+      auto-commit: false
+  # 文件上传大小限制
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+# ebean
+ebean:
+  # 是否在启动时生成数据库定义文件
+  ddl-generate: true
+  # 是否在启动时运行定义文件
+  ddl-run: true
