@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 /**
  * 所有“@RestController”注解修饰的Controller的方法被调用时，抛出指定类型的异常时，将被以指定的方式处理
  *
+ * @author 王敏聪
  * @RestControllerAdvice：Spring指定apo的意见织入目标
  * @ResponseStatus：指定被当前类处理后，返回的请求响应
- *
- * @author 王敏聪
  * @date 2019/11/18 9:53
  */
 @RestControllerAdvice(annotations = RestController.class)

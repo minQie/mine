@@ -1,4 +1,4 @@
-package com.wmc.domain.base;
+package com.wmc.common.domain;
 
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;

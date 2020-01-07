@@ -5,7 +5,7 @@ import com.wmc.common.exception.ApiException;
 import com.wmc.config.AppConfig;
 import com.wmc.domain.UploadFile;
 import com.wmc.service.FileService;
-import com.wmc.common.util.UploadFileUtil;
+import com.wmc.common.util.UploadFileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -60,20 +60,17 @@ public class FileController {
     /**
      * 下载文件
      *
-     * @param fileName 文件实际存储名
+     * @param fileName  文件实际存储名
      * @param extension 文件后缀名
-     * @param response Spring注入
+     * @param response  Spring注入
      */
     @ApiOperation("文件下载")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "fileName", value = "文件名", required = true),
-            @ApiImplicitParam(name = "extension", value = "拓展名", required = true)
-    })
+    @ApiImplicitParams({@ApiImplicitParam(name = "fileName", value = "文件名", required = true), @ApiImplicitParam(name = "extension", value = "拓展名", required = true)})
     @GetMapping(AppConfig.RELATIVE_PATH + "{fileName}.{extension}")
     public void requestImage(@PathVariable("fileName") String fileName, @PathVariable("extension") String extension, @ApiIgnore HttpServletResponse response) throws IOException {
         // 1、文件信息查询
         UploadFile uploadFile = fileService.findByFileNameAndExtension(fileName, extension);
-        File file = new File(UploadFileUtil.getDiskAbsoluteUrl(uploadFile));
+        File file = new File(UploadFileUtils.getDiskAbsoluteUrl(uploadFile));
         // 2、文件存在校验
         if (!file.exists()) {
             throw new ApiException(ApiErrorCodes.FILE_ALREADY_DELETE);
@@ -83,17 +80,17 @@ public class FileController {
             // 响应类型：.*（ 二进制流，不知道下载文件类型）
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             // 浏览器弹出下载框
-            response.setHeader("Content-Disposition", "attachment;filename=" + "\"" + UploadFileUtil.getFileNameWithExtension(uploadFile) + "\"");
+            response.setHeader("Content-Disposition", "attachment;filename=" + "\"" + UploadFileUtils.getFileNameWithExtension(uploadFile) + "\"");
             // 文件大小
             response.setContentLengthLong(FileUtils.sizeOf(file));
             response.getOutputStream().write(FileUtils.readFileToByteArray(file));
         } catch (IOException e) {
             // 要是下载的是图片的话，可以像下面这样给一个项目中内置的默认图片
-//            File defaultImage = ResourceUtils.getFile("classpath:static/imgs/noimage.png");
-//
-//            // 设置ContentType
-//            response.setContentType("image/*");
-//            response.getOutputStream().write(FileUtil.toByteArray(defaultImage.getPath()));
+            //            File defaultImage = ResourceUtils.getFile("classpath:static/imgs/noimage.png");
+            //
+            //            // 设置ContentType
+            //            response.setContentType("image/*");
+            //            response.getOutputStream().write(FileUtils.toByteArray(defaultImage.getPath()));
         }
     }
 
