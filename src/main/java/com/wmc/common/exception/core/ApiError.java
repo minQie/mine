@@ -10,12 +10,14 @@ public interface ApiError {
 
     /**
      * 返回
+     *
      * @return 错误码
      */
     int getCode();
 
     /**
      * 返回
+     *
      * @return 错误信息
      */
     String getMessage();

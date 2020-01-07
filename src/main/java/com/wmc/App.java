@@ -8,7 +8,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * 项目启动类
- *
+ * <p>
  * ServletComponentScan注解用于扫描@WebServlet、@WebFilter、@WebListener
  *
  * @author 王敏聪

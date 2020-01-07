@@ -28,13 +28,7 @@ public class FastJsonHttpMessageConverterConfig {
     @Bean
     public HttpMessageConverters fastJsonHttpMessageConverters() {
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
-        fastJsonConfig.setSerializerFeatures(
-                SerializerFeature.PrettyFormat,
-                SerializerFeature.WriteMapNullValue,
-                SerializerFeature.WriteNullListAsEmpty,
-                SerializerFeature.WriteNullStringAsEmpty,
-                SerializerFeature.WriteNullNumberAsZero
-        );
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullListAsEmpty, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero);
 
         FastJsonHttpMessageConverter fastConvert = new FastJsonHttpMessageConverter();
         fastConvert.setFastJsonConfig(fastJsonConfig);

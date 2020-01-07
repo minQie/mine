@@ -1,35 +1,92 @@
 server:
   port: 8081
+  compression:
+    enabled: true
+    min-response-size: 1024
+    mime-types:
+    - text/html
+    - text/xml
+    - text/plain
+    - text/css
+    - text/javascript
+    - application/javascript
+    - application/json
+    - application/xml
+    - image/gif
+    - image/jpeg
+    - image/png
+# 日志（默认行为是一天一个日志文件）
+logging:
+  level:
+    # 日志输出级别
+    root: warn
+    web: debug
+  # 文件策略：文件名、压缩（默认每天压缩一个）
+  file:
+    # 完整文件名
+    name: wmc.log
+    # 超过这个大小，将被压缩
+    max-size: 10MB
+    max-history: 7
+  # 日志格式
+  pattern:
+    # 时间格式
+    dateformat: yyyy-MM-dd HH:mm:ss
+    # 输出到文件的日志格式
+    # file:
+    # 输出到控制台的日志格式
+    # console:
 
 spring:
+  # 企业微信邮箱服务器
+  mail:
+    # SMTP服务器
+    host: smtp.exmail.qq.com
+    # SMTP服务器秘钥
+    password: mSf8xsrL3bnX6Wso
+    # 邮件发送者的真实邮箱
+    username: mincong.wang@firstouch.com.cn
+
   # 数据源
   datasource:
     url: jdbc:mysql://localhost:8090/springboot?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: 123
-    max-active: 10
-    initial-size: 1
-    max-wait: 60000
-    min-idle: 1
-    time-between-eviction-runs-millis: 60000
-    min-evictable-idle-time-millis: 300000
-    validation-query: select 1
-    test-while-idle: true
-    test-on-borrow: true
-    test-on-return: true
-    pool-prepared-statements: true
-    max-open-prepared-statements: 10
     hikari:
       # ebean 托管事物提交，这里需要关闭自动提交
       auto-commit: false
+      connection-init-sql: 1
+      # 测试数据库连接sql
+      connection-test-query: select 1
+      # 数据库连接超时时间（默认30秒，单位：毫秒）
+      connection-timeout: 30000
+      # 最小空闲连接数量（默认：10）
+      minimum-idle: 4
+      # 连接池最大连接数（默认：10）
+      maximum-pool-size: 16
+      # 连接的最长生命周期，值0表示无限生命周期（默认：30分钟，单位：毫秒）
+      max-lifetime: 600000
+      # 空闲连接最大存活时间（默认：10分钟，单位：毫秒）
+      idle-timeout: 300000
+
   # 文件上传大小限制
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
 # ebean
 ebean:
-  # 是否在启动时生成数据库定义文件
   ddl-generate: true
-  # 是否在启动时运行定义文件
-  ddl-run: true
+  ddl-run: false
+
+# 自定义配置
+app:
+  # 异常邮件通知
+  exception-mail-notify:
+    # 邮件发送者的昵称
+    nickname: My Bug Reporter
+    # 是否开启发生预期外异常时邮件提示（默认：关闭）
+    'on': true
+    # 发生预期外异常时，要通知的邮箱
+    send-to: mincong.wang@firstouch.com.cn

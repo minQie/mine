@@ -19,7 +19,6 @@ import java.util.List;
  *
  * @author 王敏聪
  * @date 2019年11月20日14:21:05
- *
  */
 @Configuration
 public class Swagger2Config {
@@ -35,12 +34,7 @@ public class Swagger2Config {
     private List<Parameter> getAdminTokenParam() {
         List<Parameter> parameterList = new ArrayList<>();
         ParameterBuilder builder = new ParameterBuilder();
-        builder.description("登录获取的Token")
-                .modelRef(new ModelRef("String"))
-                .parameterType("header")
-                .name("x-admin-token")
-                .required(true)
-                .build();
+        builder.description("登录获取的Token").modelRef(new ModelRef("String")).parameterType("header").name("x-admin-token").required(true).build();
         parameterList.add(builder.build());
         return parameterList;
     }
@@ -53,19 +47,10 @@ public class Swagger2Config {
     @Bean
     public Docket adminApiWithGlobalLoginToken() {
         // ui
-        ApiInfo adminApiInfo = new ApiInfoBuilder()
-                .title("Swagger2 接口文档")
-                .description("浪起来~")
-                .version(version)
-                .build();
+        ApiInfo adminApiInfo = new ApiInfoBuilder().title("Swagger2 接口文档").description("浪起来~").version(version).build();
 
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("核心模块")
-                .enable(enable)
-                .apiInfo(adminApiInfo)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.wmc"))
-//                .paths(PathSelectors.regex("^(?:(?!(/api/user/v1/manager.*)).)*$"))
+        return new Docket(DocumentationType.SWAGGER_2).groupName("核心模块").enable(enable).apiInfo(adminApiInfo).select().apis(RequestHandlerSelectors.basePackage("com.wmc"))
+                //                .paths(PathSelectors.regex("^(?:(?!(/api/user/v1/manager.*)).)*$"))
                 .build();
     }
 

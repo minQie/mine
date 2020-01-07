@@ -1,6 +1,6 @@
 package com.wmc.web.filter.xss;
 
-import com.wmc.common.util.JsoupUtil;
+import com.wmc.common.util.JSoupUtils;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
  * Springboot提供的Wrapper类 - 包装HttpServletRequest，对其获取参数的方法进行额外处理
- *
+ * <p>
  * getParameterNames、getParameterValues、getParameterMap根据需要决定是否覆盖（目前未覆盖）
  *
  * @author 王敏聪
@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServletRequestWrapper;
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-    /** 原始的http请求对象 */
+    /**
+     * 原始的http请求对象
+     */
     @Getter
     private HttpServletRequest orgRequest;
 
@@ -31,19 +33,18 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     /**
      * 覆盖getParameter方法，将参数名和参数值都做xss过滤如果需要获得原始的值，则通过super.getParameterValues(name)来获取
-     *
      */
     @Override
     public String getParameter(String name) {
-		// name 为content 或者 以WithHtml结尾，说明是富文本？
+        // name 为content 或者 以WithHtml结尾，说明是富文本？
         boolean isRichTest = ("content".equals(name) || name.endsWith("WithHtml"));
         if (isRichTest && !isIncludeRichText) {
             return super.getParameter(name);
         }
-        name = JsoupUtil.clean(name);
+        name = JSoupUtils.clean(name);
         String value = super.getParameter(name);
         if (StringUtils.isNotBlank(value)) {
-            value = JsoupUtil.clean(value);
+            value = JSoupUtils.clean(value);
         }
         return value;
     }
@@ -59,7 +60,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         String[] arr = super.getParameterValues(name);
         if (arr != null) {
             for (int i = 0; i < arr.length; i++) {
-                arr[i] = JsoupUtil.clean(arr[i]);
+                arr[i] = JSoupUtils.clean(arr[i]);
             }
         }
         return arr;
@@ -71,10 +72,10 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
      */
     @Override
     public String getHeader(String name) {
-        name = JsoupUtil.clean(name);
+        name = JSoupUtils.clean(name);
         String value = super.getHeader(name);
         if (StringUtils.isNotBlank(value)) {
-            value = JsoupUtil.clean(value);
+            value = JSoupUtils.clean(value);
         }
         return value;
     }

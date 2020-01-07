@@ -11,7 +11,7 @@ import com.wmc.domain.UploadFile;
  * @author 王敏聪
  * @date 2019/11/19 23:13
  */
-public class UploadFileUtil {
+public class UploadFileUtils {
 
     /**
      * 获取访问文件的文件名（带有拓展名）

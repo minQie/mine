@@ -10,9 +10,11 @@ import org.jsoup.safety.Whitelist;
  * @author 王敏聪
  * @date 2019年5月6日09:23:30
  */
-public class JsoupUtil {
+public class JSoupUtils {
 
-    /** 白名单：使用Jsoup内置的几种常见的白名单 */
+    /**
+     * 白名单：使用Jsoup内置的几种常见的白名单
+     */
     private static final Whitelist WHITE_LIST = Whitelist.simpleText();
     private static final Document.OutputSettings OUTPUT_SETTINGS = new Document.OutputSettings().prettyPrint(false);
 
