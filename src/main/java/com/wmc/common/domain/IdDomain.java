@@ -16,7 +16,7 @@ import javax.persistence.MappedSuperclass;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class BaseIdDomain extends Model {
+public abstract class IdDomain extends Model {
 
     @Id
     long id;

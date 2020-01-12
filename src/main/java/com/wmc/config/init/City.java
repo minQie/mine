@@ -1,6 +1,6 @@
 package com.wmc.config.init;
 
-import cn.firstouch.web.data.IdDomain;
+import com.wmc.common.domain.IdDomain;
 import io.ebean.annotation.Index;
 import lombok.Getter;
 import lombok.Setter;

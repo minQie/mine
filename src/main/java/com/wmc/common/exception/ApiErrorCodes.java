@@ -14,7 +14,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ApiErrorCodes implements ApiError {
 
-    /** 文件异常 */
+    /**
+     * 后台代码层面
+     */
+    PARAM_NULL(1, "后台人员错误"),
+
+    /**
+     * 文件异常
+     */
     FILE_UPLOAD_FAIL(1, "文件上传失败"),
     FILE_NOT_EXIST(2, "文件不存在"),
     FILE_ALREADY_DELETE(3, "文件已被删除"),

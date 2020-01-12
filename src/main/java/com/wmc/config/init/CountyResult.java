@@ -1,6 +1,6 @@
 package com.wmc.config.init;
 
-import cn.firstouch.web.data.result.IdResult;
+import com.wmc.common.result.IdResult;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
