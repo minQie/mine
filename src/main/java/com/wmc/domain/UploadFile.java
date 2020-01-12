@@ -1,6 +1,6 @@
 package com.wmc.domain;
 
-import com.wmc.common.domain.BaseWhenDomain;
+import com.wmc.common.domain.WhenDomain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,7 @@ import javax.persistence.Entity;
 @Setter
 @Getter
 @Entity
-public class UploadFile extends BaseWhenDomain {
+public class UploadFile extends WhenDomain {
 
     /**
      * 项目域名

@@ -55,7 +55,7 @@ spring:
     hikari:
       # ebean 托管事物提交，这里需要关闭自动提交
       auto-commit: false
-      connection-init-sql: 1
+      connection-init-sql: select 1
       # 测试数据库连接sql
       connection-test-query: select 1
       # 数据库连接超时时间（默认30秒，单位：毫秒）
@@ -82,6 +82,10 @@ ebean:
 
 # 自定义配置
 app:
+  # 自定义域名
+  domain: http://127.0.0.1
+  # 是否根据area.json生成对应的sql语句
+  area-sql-generate: false
   # 异常邮件通知
   exception-mail-notify:
     # 邮件发送者的昵称
@@ -90,3 +94,7 @@ app:
     'on': true
     # 发生预期外异常时，要通知的邮箱
     send-to: mincong.wang@firstouch.com.cn
+  # 是否开启swagger
+  swagger-enable: true
+  # api 文档版本
+  api-version: v1.0

@@ -27,7 +27,7 @@ public class EbeanConfigFactoryBean implements FactoryBean<EbeanServer>, Initial
     private EbeanServer server;
 
     @Override
-    public EbeanServer getObject() throws Exception {
+    public EbeanServer getObject() {
         return server;
     }
 
@@ -42,7 +42,7 @@ public class EbeanConfigFactoryBean implements FactoryBean<EbeanServer>, Initial
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         // 如果没有指定当前用户提供方法则默认返回 null（主要是为了支持@WhoCreated注解）
         if (config.getCurrentUserProvider() == null) {
             config.setCurrentUserProvider(() -> null);
