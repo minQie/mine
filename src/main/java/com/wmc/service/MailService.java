@@ -2,7 +2,6 @@ package com.wmc.service;
 
 import com.wmc.common.service.MailSender;
 import com.wmc.common.util.DateUtils;
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -133,7 +132,7 @@ public class MailService implements MailSender {
      */
     public void exceptionNotify(Exception e, String stackTrace) {
         if (sendTo != null && sendTo.size() != 0) {
-            String attachmentName = DateUtils.getDateString(DateUtils.DETAIL_FORMAT) + ".log";
+            String attachmentName = DateUtils.getDateString(DateUtils.DEFAULT_FORMAT) + ".log";
             try {
                 for (String email : sendTo) {
                     this.sendSimpleTextWithAttachment(email, "有bug咯", e.getMessage(), Pair.of(attachmentName, stackTrace));
