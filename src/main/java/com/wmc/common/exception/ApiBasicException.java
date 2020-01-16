@@ -14,12 +14,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ApiBasicException extends RuntimeException implements ApiError {
 
-    private final int code;
-
     private final String message;
 
     public ApiBasicException(ApiError apiError) {
-        this(apiError.getCode(), apiError.getMessage());
+        this(apiError.getMessage());
     }
 
 }
