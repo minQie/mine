@@ -14,12 +14,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ApiBasicExceptionResult implements ApiError {
 
-    private final int code;
-
     private final String message;
 
     public ApiBasicExceptionResult(ApiError apiError) {
-        this(apiError.getCode(), apiError.getMessage());
+        this(apiError.getMessage());
     }
 
 }
