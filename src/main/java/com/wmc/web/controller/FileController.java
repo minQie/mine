@@ -2,10 +2,10 @@ package com.wmc.web.controller;
 
 import com.wmc.common.exception.ApiErrorCodes;
 import com.wmc.common.exception.ApiException;
+import com.wmc.common.util.UploadFileUtils;
 import com.wmc.config.AppConfig;
 import com.wmc.domain.UploadFile;
 import com.wmc.service.FileService;
-import com.wmc.common.util.UploadFileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -65,7 +65,10 @@ public class FileController {
      * @param response  Spring注入
      */
     @ApiOperation("文件下载")
-    @ApiImplicitParams({@ApiImplicitParam(name = "fileName", value = "文件名", required = true), @ApiImplicitParam(name = "extension", value = "拓展名", required = true)})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fileName", value = "文件名", required = true),
+            @ApiImplicitParam(name = "extension", value = "拓展名", required = true)
+    })
     @GetMapping(AppConfig.RELATIVE_PATH + "{fileName}.{extension}")
     public void requestImage(@PathVariable("fileName") String fileName, @PathVariable("extension") String extension, @ApiIgnore HttpServletResponse response) throws IOException {
         // 1、文件信息查询
