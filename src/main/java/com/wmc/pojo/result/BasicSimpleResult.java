@@ -3,7 +3,7 @@ package com.wmc.pojo.result;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.collect.Lists;
-import com.wmc.common.domain.IdDomain;
+import com.wmc.common.domain.BaseIdDomain;
 import com.wmc.common.exception.ApiErrorCodes;
 import com.wmc.common.exception.ApiException;
 import io.ebean.annotation.DbArray;
@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  * @Author 王敏聪
  * @Date 2019/11/1 15:37
  */
-public class BasicSimpleResult<T extends IdDomain> {
+public class BasicSimpleResult<T extends BaseIdDomain> {
 
     /**
      * 默认忽略的属性名称
@@ -85,7 +85,7 @@ public class BasicSimpleResult<T extends IdDomain> {
      * @param <T>    IdDomain子类
      * @return 本类实例
      */
-    public static <T extends IdDomain> BasicSimpleResult<T> of(T entity) {
+    public static <T extends BaseIdDomain> BasicSimpleResult<T> of(T entity) {
         return new BasicSimpleResult<>(entity).build();
     }
 
@@ -96,7 +96,7 @@ public class BasicSimpleResult<T extends IdDomain> {
      * @param <T>    IdDomain子类
      * @return
      */
-    public static <T extends IdDomain> BasicSimpleResult<T> entity(T entity) {
+    public static <T extends BaseIdDomain> BasicSimpleResult<T> entity(T entity) {
         return new BasicSimpleResult<>(entity);
     }
 
@@ -182,17 +182,17 @@ public class BasicSimpleResult<T extends IdDomain> {
                       必须实现Serializable接口（即默认的基本的包装数据类型，想要被序列化只要实现改接口）
                       打开反编译的WhenDomain字节码，会发现多实现了一个EntityBean(extends Serializable)接口（神坑）
                      */
-                    boolean isMesDomain = IdDomain.class.isAssignableFrom(propertyType);
+                    boolean isMesDomain = BaseIdDomain.class.isAssignableFrom(propertyType);
                     boolean ifList = Collection.class.isAssignableFrom(propertyType);
                     boolean ifListIsNotDecorateWithDbArray = field.getAnnotation(DbArray.class) == null;
                     if (isMesDomain) {
                         switch (level) {
                             case BASIC:
-                                propertyValue = BasicSimpleResult.of((IdDomain) propertyValue);
+                                propertyValue = BasicSimpleResult.of((BaseIdDomain) propertyValue);
                                 break;
                             case ID:
                                 propertyName += "Id";
-                                propertyValue = ((IdDomain) propertyValue).getId();
+                                propertyValue = ((BaseIdDomain) propertyValue).getId();
                                 break;
                             case NONE:
                                 propertyName = null;
@@ -204,11 +204,11 @@ public class BasicSimpleResult<T extends IdDomain> {
                     else if (ifList && ifListIsNotDecorateWithDbArray) {
                         switch (level) {
                             case BASIC:
-                                propertyValue = ((List<IdDomain>) propertyValue).stream().map(BasicSimpleResult::of).collect(Collectors.toList());
+                                propertyValue = ((List<BaseIdDomain>) propertyValue).stream().map(BasicSimpleResult::of).collect(Collectors.toList());
                                 break;
                             case ID:
                                 propertyName = propertyName.substring(0, propertyName.length() - 1) + "Ids";
-                                propertyValue = ((List<IdDomain>) propertyValue).stream().map(IdDomain::getId).collect(Collectors.toList());
+                                propertyValue = ((List<BaseIdDomain>) propertyValue).stream().map(BaseIdDomain::getId).collect(Collectors.toList());
                                 break;
                             case NONE:
                                 propertyName = null;

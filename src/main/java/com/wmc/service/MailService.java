@@ -1,7 +1,7 @@
 package com.wmc.service;
 
-import com.wmc.common.service.MailSender;
 import com.wmc.common.util.DateUtils;
+import com.wmc.config.StaticConfig;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -33,7 +33,7 @@ import java.util.List;
 @Setter
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class MailService implements MailSender {
+public class MailService {
 
     /**
      * 邮件发送者的邮箱
@@ -62,7 +62,6 @@ public class MailService implements MailSender {
      * @param subject 主题
      * @param content 内容
      */
-    @Override
     public void sendSimpleText(@Email String to, String subject, String content) {
         SimpleMailMessage message = new SimpleMailMessage();
 
@@ -135,7 +134,7 @@ public class MailService implements MailSender {
     @Async
     public void exceptionNotify(Exception e, String stackTrace) {
         if (sendTo != null && sendTo.size() != 0) {
-            String attachmentName = DateUtils.getDateString(DateUtils.DEFAULT_FORMAT) + ".log";
+            String attachmentName = DateUtils.getDateString(StaticConfig.DATE_TIME_PATTERN) + ".log";
             try {
                 for (String email : sendTo) {
                     this.sendSimpleTextWithAttachment(email, "有bug咯", e.getMessage(), Pair.of(attachmentName, stackTrace));

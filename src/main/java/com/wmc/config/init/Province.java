@@ -1,6 +1,6 @@
 package com.wmc.config.init;
 
-import com.wmc.common.domain.IdDomain;
+import com.wmc.common.domain.BaseIdDomain;
 import io.ebean.annotation.Index;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Province extends IdDomain {
+public class Province extends BaseIdDomain {
 
     /**
      * 名称

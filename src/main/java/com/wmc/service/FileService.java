@@ -7,6 +7,7 @@ import com.wmc.common.util.FileUtils;
 import com.wmc.common.util.UploadFileUtils;
 import com.wmc.common.util.UploadUtils;
 import com.wmc.config.AppConfig;
+import com.wmc.config.StaticConfig;
 import com.wmc.domain.UploadFile;
 import com.wmc.domain.query.QUploadFile;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class FileService {
      */
     public String save(MultipartFile file) throws IOException {
         // 1、准备保存文件的文件夹
-        String relativeDirectoryPath = DateUtils.getDateString(DateUtils.YEAR_MONTH_DAY_FORMAT) + "/";
+        String relativeDirectoryPath = DateUtils.getDateString(StaticConfig.DATE_PATTERN) + "/";
         File uploadDirectory = UploadUtils.getUploadDirectory(relativeDirectoryPath);
 
         // 2、保存文件

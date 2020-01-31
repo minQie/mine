@@ -50,7 +50,7 @@ public class XssFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        if (handleExcludeURL(req, resp)) {
+        if (handleExcludeUrl(req, resp)) {
             log.info("请求：{}不需要过滤", req.getServletPath());
             chain.doFilter(request, response);
             return;
@@ -67,7 +67,7 @@ public class XssFilter implements Filter {
      * @param response
      * @return
      */
-    private boolean handleExcludeURL(HttpServletRequest request, HttpServletResponse response) {
+    private boolean handleExcludeUrl(HttpServletRequest request, HttpServletResponse response) {
         if (excludes == null || excludes.isEmpty()) {
             return false;
         }

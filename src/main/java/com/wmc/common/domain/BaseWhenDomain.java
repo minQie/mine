@@ -17,7 +17,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class WhenDomain extends IdDomain {
+public abstract class BaseWhenDomain extends BaseIdDomain {
 
     @WhenCreated
     Instant whenCreated;
