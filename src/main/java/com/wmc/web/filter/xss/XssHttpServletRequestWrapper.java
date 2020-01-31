@@ -1,6 +1,6 @@
 package com.wmc.web.filter.xss;
 
-import com.wmc.common.util.JSoupUtils;
+import com.wmc.common.util.JsoupUtils;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -41,10 +41,10 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         if (isRichTest && !isIncludeRichText) {
             return super.getParameter(name);
         }
-        name = JSoupUtils.clean(name);
+        name = JsoupUtils.clean(name);
         String value = super.getParameter(name);
         if (StringUtils.isNotBlank(value)) {
-            value = JSoupUtils.clean(value);
+            value = JsoupUtils.clean(value);
         }
         return value;
     }
@@ -60,7 +60,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         String[] arr = super.getParameterValues(name);
         if (arr != null) {
             for (int i = 0; i < arr.length; i++) {
-                arr[i] = JSoupUtils.clean(arr[i]);
+                arr[i] = JsoupUtils.clean(arr[i]);
             }
         }
         return arr;
@@ -72,10 +72,10 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
      */
     @Override
     public String getHeader(String name) {
-        name = JSoupUtils.clean(name);
+        name = JsoupUtils.clean(name);
         String value = super.getHeader(name);
         if (StringUtils.isNotBlank(value)) {
-            value = JSoupUtils.clean(value);
+            value = JsoupUtils.clean(value);
         }
         return value;
     }

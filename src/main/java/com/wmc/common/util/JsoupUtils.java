@@ -10,7 +10,7 @@ import org.jsoup.safety.Whitelist;
  * @author 王敏聪
  * @date 2019年5月6日09:23:30
  */
-public class JSoupUtils {
+public class JsoupUtils {
 
     /**
      * 白名单：使用Jsoup内置的几种常见的白名单

@@ -1,6 +1,6 @@
 package com.wmc.config.init;
 
-import com.wmc.common.domain.IdDomain;
+import com.wmc.common.domain.BaseIdDomain;
 import io.ebean.annotation.Index;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,7 @@ import javax.persistence.ManyToOne;
 @Getter
 @Setter
 @Entity
-public class County extends IdDomain {
+public class County extends BaseIdDomain {
 
     /**
      * 名称

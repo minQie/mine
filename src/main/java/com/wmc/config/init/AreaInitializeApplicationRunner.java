@@ -2,7 +2,7 @@ package com.wmc.config.init;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.wmc.common.util.FastJSONUtilS;
+import com.wmc.common.util.FastJsonUtils;
 import com.wmc.config.AppConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +30,10 @@ import java.util.Set;
 @Configuration
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class AreaInitializeApplicationRunner implements ApplicationRunner {
+
+    private final String PROVINCE_TEMPLATE = "INSERT INTO `province` (`id`, `name`) VALUES (%d, '%s');";
+    private final String CITY_TEMPLATE = "INSERT INTO `city` (`id`, `name`, `province_id`) VALUES (%d, '%s', %d);";
+    private final String COUNTY_TEMPLATE = "INSERT INTO `county` (`id`, `name`, `city_id`) VALUES (%d, '%s', %d);";
 
     @Value("classpath:sql/area.json")
     private Resource resource;
@@ -69,11 +73,8 @@ public class AreaInitializeApplicationRunner implements ApplicationRunner {
         int provinceId = 0;
         int cityId = 0;
         int countyId = 0;
-        final String PROVINCE_TEMPLATE = "INSERT INTO `province` (`id`, `name`) VALUES (%d, '%s');";
-        final String CITY_TEMPLATE = "INSERT INTO `city` (`id`, `name`, `province_id`) VALUES (%d, '%s', %d);";
-        final String COUNTY_TEMPLATE = "INSERT INTO `county` (`id`, `name`, `city_id`) VALUES (%d, '%s', %d);";
 
-        JSONObject provinceJson = FastJSONUtilS.readJsonFromClassPath(jsonResource);
+        JSONObject provinceJson = FastJsonUtils.readJsonFromClassPath(jsonResource);
         Set<Map.Entry<String, Object>> rawProvinceList = provinceJson.entrySet();
         for (Map.Entry<String, Object> rawProvince : rawProvinceList) {
             // 省名

@@ -15,27 +15,27 @@ server:
     - image/gif
     - image/jpeg
     - image/png
-# 日志（默认行为是一天一个日志文件）
-logging:
-  level:
-    # 日志输出级别
-    root: warn
-    web: debug
-  # 文件策略：文件名、压缩（默认每天压缩一个）
-  file:
-    # 完整文件名
-    name: wmc.log
-    # 超过这个大小，将被压缩
-    max-size: 10MB
-    max-history: 7
-  # 日志格式
-  pattern:
-    # 时间格式
-    dateformat: yyyy-MM-dd HH:mm:ss
-    # 输出到文件的日志格式
-    # file:
-    # 输出到控制台的日志格式
-    # console:
+## 日志（默认行为是一天一个日志文件）
+#logging:
+#  level:
+#    # 日志输出级别
+#    root: warn
+#    web: debug
+#  # 文件策略：文件名、压缩（默认每天压缩一个）
+#  file:
+#    # 完整文件名
+#    name: wmc.log
+#    # 超过这个大小，将被压缩
+#    max-size: 10MB
+#    max-history: 7
+#  # 日志格式
+#  pattern:
+#    # 时间格式
+#    dateformat: yyyy-MM-dd HH:mm:ss
+#    # 输出到文件的日志格式
+#    # file:
+#    # 输出到控制台的日志格式
+#    # console:
 
 spring:
   # 企业微信邮箱服务器
