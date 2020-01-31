@@ -46,6 +46,14 @@ spring:
     password: mSf8xsrL3bnX6Wso
     # 邮件发送者的真实邮箱
     username: mincong.wang@firstouch.com.cn
+    # 添加如下配置，即采用SMTPS协议发送邮件(465端口)，默认是SMTP协议(25端口)
+    properties:
+      mail:
+        smtp:
+          port: 465
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
 
   # 数据源
   datasource:

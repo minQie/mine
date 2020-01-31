@@ -18,7 +18,7 @@ import java.util.Date;
  * @see DateUtils
  */
 @JsonComponent
-public class InstantJsonSerializer extends JsonSerializer<Instant> {
+public class InstantSerializer extends JsonSerializer<Instant> {
 
     @Override
     public void serialize(Instant instant, JsonGenerator gen, SerializerProvider serializers) throws IOException {

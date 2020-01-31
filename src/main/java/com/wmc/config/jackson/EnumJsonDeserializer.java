@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * @author 王敏聪
  * @date 2020-01-16 09:21:14
  */
+@Deprecated
 @Slf4j
 public class EnumJsonDeserializer extends JsonDeserializer<Enum<? extends MyEnumInterface>> {
 

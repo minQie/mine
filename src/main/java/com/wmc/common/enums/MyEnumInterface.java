@@ -1,17 +1,15 @@
 package com.wmc.common.enums;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wmc.common.exception.ApiErrorCodes;
 import com.wmc.common.exception.ApiException;
-import com.wmc.config.jackson.EnumJsonDeserializer;
-import com.wmc.config.jackson.EnumJsonSerializer;
+import com.wmc.config.jackson.MyEnumDeserializer;
+import com.wmc.config.jackson.MyEnumSerializer;
 
 /**
  * 枚举实现当前接口，会按照自定义的规则进行序列化和反序列化
  * <ul>
- * <li>序列化 {@link EnumJsonSerializer}</li>
- * <li>反序列化：{@link EnumJsonDeserializer}</li>
+ * <li>序列化 {@link MyEnumSerializer}</li>
+ * <li>反序列化：{@link MyEnumDeserializer}</li>
  * </ul>
  *
  * 注意：当前接口只能修饰枚举，否则反序列化流程无意义
@@ -19,8 +17,6 @@ import com.wmc.config.jackson.EnumJsonSerializer;
  * @author 王敏聪
  * @date 2020-01-16 00:15:33
  */
-@JsonSerialize(using = EnumJsonSerializer.class)
-@JsonDeserialize(using = EnumJsonDeserializer.class)
 public interface MyEnumInterface {
 
     /**

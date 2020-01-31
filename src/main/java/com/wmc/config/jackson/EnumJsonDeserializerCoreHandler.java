@@ -22,6 +22,7 @@ import java.util.Optional;
  * @author 王敏聪
  * @date 2020-01-16 09:24:39
  */
+@Deprecated
 @Slf4j
 public class EnumJsonDeserializerCoreHandler {
 
