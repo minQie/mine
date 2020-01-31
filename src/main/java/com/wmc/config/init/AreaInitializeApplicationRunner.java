@@ -2,7 +2,7 @@ package com.wmc.config.init;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.wmc.common.util.JsonUtil;
+import com.wmc.common.util.FastJSONUtilS;
 import com.wmc.config.AppConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,10 +40,9 @@ public class AreaInitializeApplicationRunner implements ApplicationRunner {
      * 项目的初始化方法
      *
      * @param args args
-     * @throws Exception Exception
      */
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         // 根据地区json生成sql（生成在“target/sql中”）
         try {
             if (appConfig.getAreaSqlGenerate()) {
@@ -74,7 +73,7 @@ public class AreaInitializeApplicationRunner implements ApplicationRunner {
         final String CITY_TEMPLATE = "INSERT INTO `city` (`id`, `name`, `province_id`) VALUES (%d, '%s', %d);";
         final String COUNTY_TEMPLATE = "INSERT INTO `county` (`id`, `name`, `city_id`) VALUES (%d, '%s', %d);";
 
-        JSONObject provinceJson = JsonUtil.readJsonFromClassPath(jsonResource);
+        JSONObject provinceJson = FastJSONUtilS.readJsonFromClassPath(jsonResource);
         Set<Map.Entry<String, Object>> rawProvinceList = provinceJson.entrySet();
         for (Map.Entry<String, Object> rawProvince : rawProvinceList) {
             // 省名

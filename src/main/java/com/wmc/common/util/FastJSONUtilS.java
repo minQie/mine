@@ -24,7 +24,7 @@ import java.util.Objects;
  * @date 2019年12月17日11:11:59
  */
 @Slf4j
-public class JsonUtil {
+public class FastJSONUtilS {
 
     /**
      * 读取json文件转成指定的类型

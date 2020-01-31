@@ -22,7 +22,7 @@ import java.time.format.DateTimeParseException;
  */
 @Slf4j
 @JsonComponent
-public class InstantJsonDeserializer extends JsonDeserializer<Instant> {
+public class InstantDeserializer extends JsonDeserializer<Instant> {
 
     final private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_FORMAT).withZone(ZoneId.of("Asia/Shanghai"));
 

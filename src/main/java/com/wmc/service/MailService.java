@@ -9,9 +9,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.lang.Nullable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -108,13 +110,13 @@ public class MailService implements MailSender {
      * @param content    内容
      * @param attachment 附件
      */
-    public final void sendSimpleTextWithAttachment(String to, String subject, String content, File attachment) throws MessagingException {
+    public final void sendSimpleTextWithAttachment(String to, String subject, @Nullable String content, File attachment) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
         helper.setFrom(nickname + "<" + username + ">");
         helper.setSubject(subject);
-        helper.setText(content);
+        helper.setText(content == null ? "" : content);
         helper.setTo(to);
 
         // 添加附件
@@ -130,6 +132,7 @@ public class MailService implements MailSender {
      *
      * @param stackTrace 发生的非ApiBasicException的堆栈信息
      */
+    @Async
     public void exceptionNotify(Exception e, String stackTrace) {
         if (sendTo != null && sendTo.size() != 0) {
             String attachmentName = DateUtils.getDateString(DateUtils.DEFAULT_FORMAT) + ".log";
