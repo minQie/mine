@@ -15,18 +15,21 @@ server:
     - image/gif
     - image/jpeg
     - image/png
-## 日志（默认行为是一天一个日志文件）
-#logging:
-#  level:
-#    # 日志输出级别
-#    root: warn
-#    web: debug
+# 日志（默认行为是一天一个日志文件）
+logging:
+  level:
+    # 日志输出级别
+    root: info
+    web: debug
+    # 按照spring规范要求，单独指定一个logback的配置文件
+  config: classpath:logging-config.xml
 #  # 文件策略：文件名、压缩（默认每天压缩一个）
 #  file:
 #    # 完整文件名
 #    name: wmc.log
 #    # 超过这个大小，将被压缩
 #    max-size: 10MB
+#    # 日志最大保存天数
 #    max-history: 7
 #  # 日志格式
 #  pattern:

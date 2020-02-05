@@ -8,7 +8,7 @@
         <version>2.2.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.wmc</groupId>
+    <groupId>priv.wmc</groupId>
     <artifactId>learn</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>learn</name>
