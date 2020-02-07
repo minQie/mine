@@ -3,6 +3,7 @@ package priv.wmc;
 import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -23,7 +24,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class App {
 
     public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
+///        SpringApplication.run(App.class, args);
+        // 替代默认的启动方式，项目进程启动后生成pid文件
+        SpringApplication springApplication = new SpringApplication(App.class);
+        springApplication.addListeners(new ApplicationPidFileWriter());
+        springApplication.run(args);
     }
 
 }

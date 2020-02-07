@@ -1,14 +1,13 @@
 package priv.wmc.config.notify;
 
-import priv.wmc.common.exception.ApiBasicException;
-import priv.wmc.common.util.ExceptionStackTraceUtils;
-import priv.wmc.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import priv.wmc.common.exception.ApiBasicException;
+import priv.wmc.common.util.ExceptionStackTraceUtils;
 
 /**
  * 当出现ApiException以外类型的异常，邮件提醒配置的后台开发人员
@@ -21,13 +20,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class EmailNotifyWhenExceptionOccur {
 
-    private final MailService mailService;
+    private final MailNotifier mailNotifier;
 
     @ExceptionHandler(Exception.class)
     public Object handle(Exception e) {
         String stackTrace = ExceptionStackTraceUtils.getStackTrace(e);
         if (!(e instanceof ApiBasicException)) {
-            mailService.exceptionNotify(e, stackTrace);
+            mailNotifier.exceptionNotify(e, stackTrace);
         }
         return stackTrace;
     }

@@ -1,5 +1,6 @@
 server:
   port: 8081
+  # 资源压缩传输
   compression:
     enabled: true
     min-response-size: 1024
@@ -17,11 +18,11 @@ server:
     - image/png
 # 日志（默认行为是一天一个日志文件）
 logging:
+  # 日志输出级别
   level:
-    # 日志输出级别
     root: info
     web: debug
-    # 按照spring规范要求，单独指定一个logback的配置文件
+  # 按照spring规范要求，单独指定一个logback的配置文件
   config: classpath:logging-config.xml
 #  # 文件策略：文件名、压缩（默认每天压缩一个）
 #  file:
@@ -41,6 +42,11 @@ logging:
 #    # console:
 
 spring:
+#   # springboot的异步，是基于jdk的动态代理实现的，即基于接口，那么编写的类就不能使用接口了，所以修改默认的动态代理策略为CGLIB，即基于类，也可以在@EnableAsync注解上配置
+#  aop:
+#    proxy-target-class: true
+  pid:
+    file: application.pid
   # 企业微信邮箱服务器
   mail:
     # SMTP服务器
