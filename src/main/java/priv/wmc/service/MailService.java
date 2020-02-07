@@ -1,13 +1,13 @@
 package priv.wmc.service;
 
-import priv.wmc.common.util.DateUtils;
-import priv.wmc.config.StaticConfig;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.lang.Nullable;
 import org.springframework.mail.SimpleMailMessage;
@@ -15,6 +15,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import priv.wmc.common.util.DateUtils;
+import priv.wmc.config.StaticConfig;
+import priv.wmc.config.notify.MailNotifier;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -32,8 +35,9 @@ import java.util.List;
 @Getter
 @Setter
 @Service
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class MailService {
+public class MailService implements MailNotifier {
 
     /**
      * 邮件发送者的邮箱
@@ -132,6 +136,7 @@ public class MailService {
      * @param stackTrace 发生的非ApiBasicException的堆栈信息
      */
     @Async
+    @Override
     public void exceptionNotify(Exception e, String stackTrace) {
         if (sendTo != null && sendTo.size() != 0) {
             String attachmentName = DateUtils.getDateString(StaticConfig.DATE_TIME_PATTERN) + ".log";

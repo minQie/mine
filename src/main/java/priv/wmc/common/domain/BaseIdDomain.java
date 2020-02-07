@@ -19,6 +19,6 @@ import javax.persistence.MappedSuperclass;
 public abstract class BaseIdDomain extends Model {
 
     @Id
-    long id;
+    Long id;
 
 }
