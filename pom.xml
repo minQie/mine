@@ -102,7 +102,7 @@
             <version>2.5</version>
         </dependency>
 
-        <!-- StringUtil -->
+        <!-- StringUtil、FieldUtils -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -148,10 +148,17 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- 注入数据源对象，不然Ebean拿不到数据源 -->
+        <!-- 数据源驱动 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.2-jre</version>
         </dependency>
 
     </dependencies>

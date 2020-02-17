@@ -4,10 +4,12 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.jackson.JsonComponent;
 import priv.wmc.common.enums.MyEnumInterface;
 import priv.wmc.common.exception.ApiErrorCodes;
 import priv.wmc.common.exception.ApiException;
-import lombok.extern.slf4j.Slf4j;
+import priv.wmc.common.util.RegexUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -26,14 +28,14 @@ import java.util.stream.Collectors;
  * 强调，没有真正意义上完美支持自定义反序列化枚举方式，实际中，参数实体中支持的枚举相关类型：<code>Enum<? extends MyEnumInterface></code>和<code>Collection<Enum<? extends MyEnumInterface>></code>
  *
  * @see MyEnumInterface#getDefault()
- * @see EnumJsonDeserializerCoreHandler#getAppropriateDeserializeField(Class, String)
+ * @see EnumDeserializerCoreHandler#getAppropriateDeserializeField(Class, String)
  *
  * @author 王敏聪
  * @date 2020-01-16 09:21:14
  */
-@Deprecated
 @Slf4j
-public class EnumJsonDeserializer extends JsonDeserializer<Enum<? extends MyEnumInterface>> {
+@JsonComponent
+public class EnumDeserializer extends JsonDeserializer<Enum> {
 
     /**
      * 1、这里无法控制传参为null时的反序列化行为（为null时，在回调当前反序列化器的该方法之前的其他反序列化器就已经结束了）
@@ -41,42 +43,48 @@ public class EnumJsonDeserializer extends JsonDeserializer<Enum<? extends MyEnum
      * 3、代码逻辑保证了语法的正确性，所有"unchecked cast"警告可以忽略
      */
     @Override
-    public Enum<? extends MyEnumInterface> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        // 1、序列化枚举的参数，无论是String，int统一转成int处理
-        JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        int value = node.asInt();
-
-        // 2、获取要反序列化的类型（目前只支持这两种：Enum<? extends MyEnumInterface>、Collection<Enum<? extends MyEnumInterface>>）
-        Type realType = EnumJsonDeserializerCoreHandler.getRealEnumInvolvedType(jsonParser);
+    public Enum deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        // 1、获取要反序列化的类型（目前只支持这两种：Enum<? extends MyEnumInterface>、Collection<Enum<? extends MyEnumInterface>>）
+        Type realType = EnumDeserializerCoreHandler.getRealEnumInvolvedType(jsonParser);
         String className = realType.getTypeName();
 
+        // 获取枚举字节码对象 - 下面这个类型转换，不会对枚举的泛型进行校验
         @SuppressWarnings("unchecked")
-        Class<MyEnumInterface> myEnumClass = (Class<MyEnumInterface>) realType;
+        Class<Enum> myEnumClass = (Class<Enum>) realType;
 
-        // 3、校验真实类型是否是枚举
-        if (!myEnumClass.isEnum()) {
-            log.error("反序列化失败 - MyEnumInterface修饰的[{}]不是一个枚举类", className);
-            throw new ApiException(ApiErrorCodes.ENUM_DESERIALIZE_FAIL, "请通知相应的后台开发人员");
+        // 2、校验枚举类是否实现了MyEnumInterface接口
+        if (!MyEnumInterface.class.isAssignableFrom(myEnumClass)) {
+            log.warn("反序列化失败 - 枚举：{}，没有实现myEnum接口，无法被正确反序列化", myEnumClass.getName());
+            throw new ApiException(ApiErrorCodes.ENUM_DESERIALIZE_FAIL);
         }
 
         @SuppressWarnings("unchecked")
         Class<Enum<? extends MyEnumInterface>> realEnumClass = (Class<Enum<? extends MyEnumInterface>>) realType;
         Enum<? extends MyEnumInterface>[] enumConstants = realEnumClass.getEnumConstants();
 
-        // 4、校验枚举中是否了枚举常量
+        // 3、校验枚举中是否定义了枚举常量
         if (enumConstants.length == 0) {
             log.error("反序列化失败 - [{}]中没有定义任何枚举常量", className);
             throw new ApiException(ApiErrorCodes.ENUM_DESERIALIZE_FAIL, "请通知相应的后台开发人员");
         }
 
+        JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+        // 4、校验参数的格式，JsonNode.asInt非数字的格式会被，默认转为0
+        String valueString = node.asText();
+        if (!RegexUtils.isInteger(valueString)) {
+            log.debug("反序列化失败 - 参数非法，枚举[{}]可用值：[{}]，实际参数：[{}]", className, Arrays.stream(enumConstants).map(myEnum -> ((MyEnumInterface)myEnum).getValue()).collect(Collectors.toList()), valueString);
+            return ((MyEnumInterface) enumConstants[0]).getDefault();
+        }
+
         // 5、根据“getValue()”反序列化
+        int value = node.asInt();
         for (Enum<? extends MyEnumInterface> myEnum : enumConstants) {
             if (((MyEnumInterface) myEnum).getValue() == value) {
                 return myEnum;
             }
         }
 
-        // 无匹配项结果处理
+        // 6、无匹配项结果处理
         log.debug("反序列化失败 - 参数非法，枚举[{}]可用值：[{}]，实际参数：[{}]", className, Arrays.stream(enumConstants).map(myEnum -> ((MyEnumInterface)myEnum).getValue()).collect(Collectors.toList()), value);
         return ((MyEnumInterface) enumConstants[0]).getDefault();
     }

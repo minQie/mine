@@ -3,11 +3,11 @@ package priv.wmc.config.jackson;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonStreamContext;
-import priv.wmc.common.exception.ApiErrorCodes;
-import priv.wmc.common.exception.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.util.ReflectionUtils;
+import priv.wmc.common.exception.ApiErrorCodes;
+import priv.wmc.common.exception.ApiException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -22,14 +22,13 @@ import java.util.Optional;
  * @author 王敏聪
  * @date 2020-01-16 09:24:39
  */
-@Deprecated
 @Slf4j
-public class EnumJsonDeserializerCoreHandler {
+class EnumDeserializerCoreHandler {
 
     /**
      * 从jsonParser的反序列化上下文中获取要反序列化的字段类型
      */
-    public static Type getRealEnumInvolvedType(JsonParser jsonParser) throws IOException {
+    static Type getRealEnumInvolvedType(JsonParser jsonParser) throws IOException {
         // 调试发现，枚举类型没有被集合或者其他容器修饰时，字段名称可以直接通过“getCurrentName”方法获取到，否则为空，故由该规律得出下面的逻辑
 
         // 找到的字段的类型是：Enum<? extends MyEnumInterface>
