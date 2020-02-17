@@ -32,7 +32,14 @@ public class AppConfig {
     /**
      * 是否生成区域sql
      */
-    public Boolean areaSqlGenerate;
+    @Value("${app.area-sql.generate}")
+    public Boolean generate;
+
+    /**
+     * 是否只生成一个整合文件
+     */
+    @Value("${app.area-sql.single-file}")
+    public Boolean singleFile;
 
     /**
      * 项目实际部署运行的服务器域名

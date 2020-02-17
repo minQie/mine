@@ -2,8 +2,6 @@ package priv.wmc.config.init;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import priv.wmc.common.util.FastJsonUtils;
-import priv.wmc.config.AppConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +11,13 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import priv.wmc.common.util.FastJsonUtils;
+import priv.wmc.config.AppConfig;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,10 +50,13 @@ public class AreaInitializeApplicationRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         // 根据地区json生成sql（生成在“target/sql中”）
         try {
-            if (appConfig.getAreaSqlGenerate()) {
+            log.info("start to generate sql file...");
+            if (appConfig.getGenerate()) {
                 initAreaSql(resource, new File(new ApplicationHome(getClass()).getSource().getParentFile().toString(), "/sql"));
             }
+            log.info("generate sql file success");
         } catch (Exception e) {
+            log.error("generate sql file fail");
             e.printStackTrace();
         }
 
@@ -76,35 +80,47 @@ public class AreaInitializeApplicationRunner implements ApplicationRunner {
 
         JSONObject provinceJson = FastJsonUtils.readJsonFromClassPath(jsonResource);
         Set<Map.Entry<String, Object>> rawProvinceList = provinceJson.entrySet();
-        for (Map.Entry<String, Object> rawProvince : rawProvinceList) {
-            // 省名
-            String provinceName = rawProvince.getKey();
-
-            // writer
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(sqlDir, provinceName + ".sql")));
-            // 生成province sql
-            writer.write(String.format(PROVINCE_TEMPLATE, ++provinceId, provinceName));
-            writer.newLine();
-
-            JSONObject cityJson = (JSONObject) rawProvince.getValue();
-            Set<Map.Entry<String, Object>> rawCityList = cityJson.entrySet();
-            for (Map.Entry<String, Object> rawCity : rawCityList) {
-                // 市名
-                String cityName = rawCity.getKey();
-                // 生成city sql
-                writer.write(String.format(CITY_TEMPLATE, ++cityId, cityName, provinceId));
-                writer.newLine();
-
-                JSONArray countyNameJsonArray = (JSONArray) rawCity.getValue();
-                // 区名
-                String[] countyNameList = countyNameJsonArray.toArray(new String[0]);
-                for (String countyName : countyNameList) {
-                    // 生成county sql
-                    writer.write(String.format(COUNTY_TEMPLATE, ++countyId, countyName, cityId));
-                    writer.newLine();
-                }
+        if (!appConfig.singleFile) {
+            for (Map.Entry<String, Object> rawProvince : rawProvinceList) {
+                String provinceName = rawProvince.getKey();
+                BufferedWriter writer = new BufferedWriter(new FileWriter(new File(sqlDir, provinceName + ".sql")));
+                write(writer, provinceId, cityId, countyId, rawProvince);
+                writer.close();
+            }
+        } else {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(sqlDir, "area.sql")));
+            for (Map.Entry<String, Object> rawProvince : rawProvinceList) {
+                write(writer, provinceId, cityId, countyId, rawProvince);
             }
             writer.close();
+        }
+    }
+
+    private void write(BufferedWriter writer, int provinceId, int cityId, int countyId, Map.Entry<String, Object> rawProvince) throws IOException {
+        // 省名
+        String provinceName = rawProvince.getKey();
+
+        // 生成province sql
+        writer.write(String.format(PROVINCE_TEMPLATE, ++provinceId, provinceName));
+        writer.newLine();
+
+        JSONObject cityJson = (JSONObject) rawProvince.getValue();
+        Set<Map.Entry<String, Object>> rawCityList = cityJson.entrySet();
+        for (Map.Entry<String, Object> rawCity : rawCityList) {
+            // 市名
+            String cityName = rawCity.getKey();
+            // 生成city sql
+            writer.write(String.format(CITY_TEMPLATE, ++cityId, cityName, provinceId));
+            writer.newLine();
+
+            JSONArray countyNameJsonArray = (JSONArray) rawCity.getValue();
+            // 区名
+            String[] countyNameList = countyNameJsonArray.toArray(new String[0]);
+            for (String countyName : countyNameList) {
+                // 生成county sql
+                writer.write(String.format(COUNTY_TEMPLATE, ++countyId, countyName, cityId));
+                writer.newLine();
+            }
         }
     }
 

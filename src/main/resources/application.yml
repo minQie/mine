@@ -102,7 +102,11 @@ app:
   # 自定义域名
   domain: http://127.0.0.1
   # 是否根据area.json生成对应的sql语句
-  area-sql-generate: false
+  area-sql:
+    # 是否要生成
+    generate: on
+    # 是否生成一个整合文件
+    single-file: true
   # 异常邮件通知
   exception-mail-notify:
     # 邮件发送者的昵称

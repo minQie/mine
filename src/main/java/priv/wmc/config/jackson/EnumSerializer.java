@@ -23,7 +23,7 @@ import java.io.IOException;
  *
  * @see StaticConfig
  */
-public class MyEnumSerializer extends JsonSerializer<MyEnumInterface> {
+public class EnumSerializer extends JsonSerializer<MyEnumInterface> {
 
     @Override
     public void serialize(MyEnumInterface myEnumInterface, JsonGenerator gen, SerializerProvider serializers) throws IOException {

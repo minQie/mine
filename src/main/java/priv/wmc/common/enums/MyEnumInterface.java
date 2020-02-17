@@ -2,13 +2,12 @@ package priv.wmc.common.enums;
 
 import priv.wmc.common.exception.ApiErrorCodes;
 import priv.wmc.common.exception.ApiException;
-import priv.wmc.config.jackson.MyEnumDeserializer;
-import priv.wmc.config.jackson.MyEnumSerializer;
+import priv.wmc.config.jackson.EnumSerializer;
 
 /**
  * 枚举实现当前接口，会按照自定义的规则进行序列化和反序列化
  * <ul>
- * <li>序列化 {@link MyEnumSerializer}</li>
+ * <li>序列化 {@link EnumSerializer}</li>
  * <li>反序列化：{@link MyEnumDeserializer}</li>
  * </ul>
  *
