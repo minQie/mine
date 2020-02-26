@@ -94,6 +94,17 @@
             <artifactId>swagger-bootstrap-ui</artifactId>
             <version>1.9.5</version>
         </dependency>
+        <!--
+          swagger核心jar已经不更新了！该版本依赖了apache下的1.5.20版本的model，当没有为数字类型设置样例，即为@ApiOperationProperty的example属性设置值
+          那么会在访问swagger文档页面时，会因“io.swagger.models.parameters.AbstractSerializableParameter”的“Long.parse("")”报出错误日志
+          核心jar不更新了，但是model有更新，故只要修改一下版本就不会出现这个问题了
+         -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>1.5.22</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- 附件上传 -->
         <dependency>
@@ -161,14 +172,34 @@
             <version>28.2-jre</version>
         </dependency>
 
+        <!-- 用maven引入本地的一个自定义jar包 -->
+        <!--<dependency>-->
+            <!--<groupId>dop-sdk-0.0.1-SNAPSHOT</groupId>-->
+            <!--<artifactId>dop-sdk</artifactId>-->
+            <!--<version>0.0.1</version>-->
+            <!--<scope>system</scope>-->
+            <!--<systemPath>${project.basedir}/src/main/resources/lib/dop-sdk-0.0.1-SNAPSHOT.jar</systemPath>-->
+        <!--</dependency>-->
+
     </dependencies>
 
-
     <build>
+        <finalName>audit</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 项目打成jar，把本地jar包也引入进去 -->
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
