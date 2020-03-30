@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
@@ -50,6 +52,11 @@ public class MySecureConfig extends WebSecurityConfigurerAdapter {
         http
             // 一、接口权限拦截相关
             .authorizeRequests()
+
+            // 临时放开webservice相关的接口
+            .antMatchers("/webservice", "/webservice/**").permitAll()
+
+
             // 1、访问特定路径的接口，需要特定的角色
             .antMatchers("/xxx").hasRole("xxx")
             // 2、剩余的其他接口，登录之后就能访问
@@ -67,17 +74,11 @@ public class MySecureConfig extends WebSecurityConfigurerAdapter {
             .passwordParameter("passwd")
             // 定义登录成功的处理器
             .successHandler((req, resp, authentication) -> {
-                resp.setContentType("application/json;charset=utf-8");
-                PrintWriter out = resp.getWriter();
-                out.write("success");
-                out.flush();
+                this.successHandle(resp);
             })
             // 定义登录失败的处理器
             .failureHandler((req, resp, exception) -> {
-                resp.setContentType("application/json;charset=utf-8");
-                PrintWriter out = resp.getWriter();
-                out.write("fail");
-                out.flush();
+                this.failHandle(resp);
             })
             .permitAll()
             .and()
@@ -87,10 +88,7 @@ public class MySecureConfig extends WebSecurityConfigurerAdapter {
             .logoutUrl("/logout")
             // 定义登出失败的处理器
             .logoutSuccessHandler((req, resp, authentication) -> {
-                resp.setContentType("application/json;charset=utf-8");
-                PrintWriter out = resp.getWriter();
-                out.write("logout success");
-                out.flush();
+                this.successHandle(resp);
             })
             .permitAll()
             .and()
@@ -100,8 +98,22 @@ public class MySecureConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable();
     }
 
+    private void successHandle(HttpServletResponse response) throws IOException {
+        response.setContentType("application/json;charset=utf-8");
+        PrintWriter out = response.getWriter();
+        out.write("success");
+        out.flush();
+    }
+
+    private void failHandle(HttpServletResponse response) throws IOException {
+        response.setContentType("application/json;charset=utf-8");
+        PrintWriter out = response.getWriter();
+        out.write("logout success");
+        out.flush();
+    }
+
     /**
-     * 如果一个地址不需要拦截，可以使用如下防水
+     * 如果一个地址不需要拦截，可以使用如下方式
      */
     @Override
     public void configure(WebSecurity webSecurity) {

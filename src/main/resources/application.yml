@@ -18,12 +18,12 @@ server:
     - image/png
 # 日志（默认行为是一天一个日志文件）
 logging:
-  # 日志输出级别
-  level:
-    root: info
-    web: debug
   # 按照spring规范要求，单独指定一个logback的配置文件
   config: classpath:logging-config.xml
+#  # 日志输出级别
+#  level:
+#    root: debug
+#    web: debug
 #  # 文件策略：文件名、压缩（默认每天压缩一个）
 #  file:
 #    # 完整文件名
@@ -33,13 +33,14 @@ logging:
 #    # 日志最大保存天数
 #    max-history: 7
 #  # 日志格式
-#  pattern:
-#    # 时间格式
-#    dateformat: yyyy-MM-dd HH:mm:ss
-#    # 输出到文件的日志格式
+  pattern:
+    # 指定时间格式
+    dateformat: yyyy-MM-dd HH:mm:ss
+
+    # 指定输出到控制台的日志格式
+#    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%15.15t] %-40.40c{1.} [%X{user}] : %m%n%xwEx"
+#    # 指定输出到文件的日志格式
 #    # file:
-#    # 输出到控制台的日志格式
-#    # console:
 
 spring:
 #   # springboot的异步，是基于jdk的动态代理实现的，即基于接口，那么编写的类就不能使用接口了，所以修改默认的动态代理策略为CGLIB，即基于类，也可以在@EnableAsync注解上配置
@@ -104,7 +105,7 @@ app:
   # 是否根据area.json生成对应的sql语句
   area-sql:
     # 是否要生成
-    generate: on
+    generate: false
     # 是否生成一个整合文件
     single-file: true
   # 异常邮件通知

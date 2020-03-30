@@ -1,12 +1,13 @@
 package priv.wmc.config;
 
-import priv.wmc.config.converter.EnumConverterFactory;
-import priv.wmc.config.converter.InstantConverter;
 import lombok.Data;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import priv.wmc.config.converter.EnumConverterFactory;
+import priv.wmc.config.converter.InstantConverter;
 
 import java.time.format.DateTimeFormatter;
 
@@ -37,5 +38,18 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         // Enum
         registry.addConverterFactory(new EnumConverterFactory());
     }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // 允许跨域访问
+        registry.addMapping("/api/**")
+            // 以下都可以使用 * 表示不限制
+            .allowedOrigins("*")
+            .allowedHeaders("content-type, authorization")
+            .allowedMethods("POST", "GET", "PUT", "DELETE", "OPTIONS", "PATCH");
+            // 是否允许发送Cookie
+            // .allowCredentials(true)
+    }
+
 }
 
