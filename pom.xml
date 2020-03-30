@@ -15,8 +15,122 @@
     <description>总结一些学习到的项目中的模板</description>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <!-- package时跳过test -->
+        <skipTests>true</skipTests>
+
+        <!-- 依赖版本管理 -->
+        <!-- cxf-spring-boot-starter-jaxws -->
+        <cxf.version>3.3.5</cxf.version>
+        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <swagger-bootstrap-ui.version>1.9.5</swagger-bootstrap-ui.version>
+        <swagger-models.version>1.5.22</swagger-models.version>
+
+        <ebean.version>11.36.4</ebean.version>
+        <ebean-spring-txn.version>11.10.4</ebean-spring-txn.version>
+        <ebean-querybean.version>11.36.3</ebean-querybean.version>
+        <querybean-generator.version>11.36.1</querybean-generator.version>
+
+        <commons-io.version>2.5</commons-io.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
+        <jsoup.version>1.12.1</jsoup.version>
+        <fastjson.version>1.2.62</fastjson.version>
+        <guava.version>28.2-jre</guava.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- ebean -->
+            <dependency>
+                <groupId>io.ebean</groupId>
+                <artifactId>ebean</artifactId>
+                <version>${ebean.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ebean</groupId>
+                <artifactId>ebean-spring-txn</artifactId>
+                <version>${ebean-spring-txn.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ebean</groupId>
+                <artifactId>ebean-querybean</artifactId>
+                <version>${ebean-querybean.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ebean</groupId>
+                <artifactId>querybean-generator</artifactId>
+                <version>${querybean-generator.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- swagger -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${springfox-swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>swagger-bootstrap-ui</artifactId>
+                <version>${swagger-bootstrap-ui.version}</version>
+            </dependency>
+            <!--
+              swagger核心jar已经不更新了！该版本依赖了apache下的1.5.20版本的model，当没有为数字类型设置样例，即为@ApiOperationProperty的example属性设置值
+              那么会在访问swagger文档页面时，会因“io.swagger.models.parameters.AbstractSerializableParameter”的“Long.parse("")”报出错误日志
+              核心jar不更新了，但是model有更新，故只要修改一下版本就不会出现这个问题了
+             -->
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${swagger-models.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <!-- webservice -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+
+            <!-- io流工具 -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+
+            <!-- StringUtil、FieldUtils -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -40,25 +154,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!-- websocket -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -83,93 +182,105 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- dao层 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <!-- ebean -->
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-spring-txn</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-querybean</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>querybean-generator</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- swagger2 -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>swagger-bootstrap-ui</artifactId>
-            <version>1.9.5</version>
         </dependency>
-        <!--
-          swagger核心jar已经不更新了！该版本依赖了apache下的1.5.20版本的model，当没有为数字类型设置样例，即为@ApiOperationProperty的example属性设置值
-          那么会在访问swagger文档页面时，会因“io.swagger.models.parameters.AbstractSerializableParameter”的“Long.parse("")”报出错误日志
-          核心jar不更新了，但是model有更新，故只要修改一下版本就不会出现这个问题了
-         -->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
-            <version>1.5.22</version>
-            <scope>compile</scope>
         </dependency>
 
-        <!-- 附件上传 -->
+        <!-- websocket -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <!-- webservice -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web-services</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-spring-boot-starter-jaxws -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+        </dependency>
+
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- io工具 -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
         </dependency>
 
         <!-- StringUtil、FieldUtils -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.12.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.62</version>
-        </dependency>
-
-        <!-- ebean -->
-        <dependency>
-            <groupId>io.ebean</groupId>
-            <artifactId>ebean</artifactId>
-            <version>11.36.4</version>
-        </dependency>
-        <dependency>
-            <groupId>io.ebean</groupId>
-            <artifactId>ebean-spring-txn</artifactId>
-            <version>11.10.4</version>
-        </dependency>
-
-        <!-- 自动生成 QueryBean -->
-        <dependency>
-            <groupId>io.ebean</groupId>
-            <artifactId>ebean-querybean</artifactId>
-            <version>11.36.3</version>
-        </dependency>
-        <dependency>
-            <groupId>io.ebean</groupId>
-            <artifactId>querybean-generator</artifactId>
-            <version>11.36.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- 数据源驱动 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>28.2-jre</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
 
         <!-- 用maven引入本地的一个自定义jar包 -->
@@ -180,7 +291,6 @@
             <!--<scope>system</scope>-->
             <!--<systemPath>${project.basedir}/src/main/resources/lib/dop-sdk-0.0.1-SNAPSHOT.jar</systemPath>-->
         <!--</dependency>-->
-
     </dependencies>
 
     <build>

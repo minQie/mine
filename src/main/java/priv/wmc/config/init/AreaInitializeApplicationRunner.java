@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
@@ -29,6 +30,7 @@ import java.util.Set;
  */
 @Slf4j
 @Configuration
+@ConditionalOnProperty(value = "app.area-sql.generate", havingValue = "true")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class AreaInitializeApplicationRunner implements ApplicationRunner {
 
@@ -51,9 +53,7 @@ public class AreaInitializeApplicationRunner implements ApplicationRunner {
         // 根据地区json生成sql（生成在“target/sql中”）
         try {
             log.info("start to generate sql file...");
-            if (appConfig.getGenerate()) {
-                initAreaSql(resource, new File(new ApplicationHome(getClass()).getSource().getParentFile().toString(), "/sql"));
-            }
+            initAreaSql(resource, new File(new ApplicationHome(getClass()).getSource().getParentFile().toString(), "/sql"));
             log.info("generate sql file success");
         } catch (Exception e) {
             log.error("generate sql file fail");
