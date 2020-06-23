@@ -19,20 +19,20 @@ server:
 # 日志（默认行为是一天一个日志文件）
 logging:
   # 按照spring规范要求，单独指定一个logback的配置文件
-  config: classpath:logging-config.xml
-#  # 日志输出级别
+#  config: classpath:logback-spring.xml
+  # 日志输出级别
 #  level:
 #    root: debug
 #    web: debug
-#  # 文件策略：文件名、压缩（默认每天压缩一个）
+  # 文件策略：文件名、压缩（默认每天压缩一个）
 #  file:
-#    # 完整文件名
+    # 完整文件名
 #    name: wmc.log
-#    # 超过这个大小，将被压缩
+    # 超过这个大小，将被压缩
 #    max-size: 10MB
-#    # 日志最大保存天数
+    # 日志最大保存天数
 #    max-history: 7
-#  # 日志格式
+  # 日志格式
   pattern:
     # 指定时间格式
     dateformat: yyyy-MM-dd HH:mm:ss
@@ -53,7 +53,7 @@ spring:
     # SMTP服务器
     host: smtp.exmail.qq.com
     # SMTP服务器秘钥
-    password: mSf8xsrL3bnX6Wso
+    password: GfTzFAJ7aEcUqgbx
     # 邮件发送者的真实邮箱
     username: mincong.wang@firstouch.com.cn
     # 添加如下配置，即采用SMTPS协议发送邮件(465端口)，默认是SMTP协议(25端口)

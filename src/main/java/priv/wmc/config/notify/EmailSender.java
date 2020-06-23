@@ -1,8 +1,14 @@
-package priv.wmc.service;
+package priv.wmc.config.notify;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,27 +23,20 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import priv.wmc.common.util.DateUtils;
 import priv.wmc.config.StaticConfig;
-import priv.wmc.config.notify.MailNotifier;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.validation.constraints.Email;
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
- * 邮件Service
+ * 邮件发送工具
  *
  * @author 王敏聪
  * @date 2019/11/29 16:23
  */
+@Slf4j
 @Getter
 @Setter
 @Service
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class MailService implements MailNotifier {
+public class EmailSender implements MailNotifier {
 
     /**
      * 邮件发送者的邮箱
@@ -66,7 +65,7 @@ public class MailService implements MailNotifier {
      * @param subject 主题
      * @param content 内容
      */
-    public void sendSimpleText(@Email String to, String subject, String content) {
+    public void sendSimpleText(String to, String subject, String content) {
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setFrom(nickname + "<" + username + ">");
@@ -138,13 +137,14 @@ public class MailService implements MailNotifier {
     @Async
     @Override
     public void exceptionNotify(Exception e, String stackTrace) {
-        if (sendTo != null && sendTo.size() != 0) {
+        if (sendTo != null && !sendTo.isEmpty()) {
             String attachmentName = DateUtils.getDateString(StaticConfig.DATE_TIME_PATTERN) + ".log";
             try {
                 for (String email : sendTo) {
                     this.sendSimpleTextWithAttachment(email, "有bug咯", e.getMessage(), Pair.of(attachmentName, stackTrace));
                 }
-            } catch (Exception ignore) {
+            } catch (Exception e1) {
+                log.error("异常通知失败: " + e.getMessage(), e1);
             }
         }
     }
