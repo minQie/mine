@@ -64,9 +64,9 @@ public class MySecureConfig extends WebSecurityConfigurerAdapter {
             .and()
             // 二、表单登录相关
             .formLogin()
-            // 1、定义登录页面，未登录时，访问一个需要登录才能访问的接口，会自动跳转到该页面
+            // 1、定义登录页面，未登录时，访问一个需要登录才能访问的接口，会自动跳转到该页面（有默认）
 //            .loginPage("/login.html")
-            // 2、定义登录接口
+            // 2、定义登录接口（有默认）
 //            .loginProcessingUrl("/login")
             // 3、定义登录时，用户名的字段名，默认为 username
             .usernameParameter("uname")

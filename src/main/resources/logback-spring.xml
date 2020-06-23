@@ -19,9 +19,11 @@ debug：是否打印logback框架的日志
     <!-- 其他1、jmx动态控制日志级别(springboot Admin) -->
     <!-- <jmxConfigurator/> -->
 
-    <!-- 其他2、定义变量，FILE输出指定路径使用改变量 --> -->
-     <property name="LOG_HOME" value="d:\log\Working-Temp" />
+    <!-- 读取主配置文件中配置 -->
+    <springProperty scope="context" name="ENV" source="spring.profiles.active"/>
 
+    <!-- 其他2、定义变量，FILE输出指定路径使用改变量 --> -->
+    <property name="LOG_HOME" value="/project/mes/${ENV}/log" />
 
     <!-- 定义输出到控制台的日志级别、格式等（相同目标的Appender可以有多个） -->
     <appender name ="CONSOLE_NOT_ERROR" class="ch.qos.logback.core.ConsoleAppender">
@@ -47,7 +49,7 @@ debug：是否打印logback框架的日志
                 <!-- 1、颜色
                     %clr(日志内容){颜色：faint黑色、cyan橄榄蓝、magenta紫红}：将小括号的内容以指定的颜色输出
                     %clr(日志内容)：将小括号的内容以当前日志级别的颜色输出：TRACE、DEBUG、INFO green、WARN  yellow、ERROR、FATAL red
-                    这样给日志上色最简单：%颜色(日志内容) - 但是实际出现了，本地没问题，mes出现了这样上色出现乱码的情况“[0;39m [35m  40[0;39m”
+                    这样给日志上色最简单：%颜色(日志内容) - 但是实际出现了，本地没问题，mes出现了这样上色出现乱码的情况
                  -->
 
                 <!-- 2、默认的日志格式及字符的特殊含义：
@@ -105,6 +107,8 @@ debug：是否打印logback框架的日志
         <File>${LOG_HOME}\study\logs\today.log</File>
         <encoder>
             <pattern>%date [%level] [%thread] %logger{60} [%file : %line] %msg%n</pattern>
+            <!-- 想知道这个配置怎么来的？见RollingFileAppender的父类LayoutWrappingEncoder -->
+            <!-- <charset class="java.nio.charset.Charset">UTF-8</charset> -->
             <charset>UTF-8</charset>
         </encoder>
         <!-- 日志策略（每天产生一个日志文件） -->
@@ -134,14 +138,50 @@ debug：是否打印logback框架的日志
         <appender-ref ref="FILE"/>
     </appender>
 
+    <!-- Mail：想要使用，需要引入好相关的邮件配置（在主配置文件中配，然后引入） -->
+    <appender name="MAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+        <!-- 过滤掉不含异常信息的 -->
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <!-- evaluator默认JaninoEventEvaluator，所以想要正常使用需要引用一个jar（否则没有任何异常提示的项目推出） -->
+            <evaluator>
+                <expression>level >= ERROR &amp;&amp; throwable != null</expression>
+            </evaluator>
+            <OnMatch>ACCEPT</OnMatch>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+        <asynchronousSending>true</asynchronousSending>
+        <SSL>true</SSL>
+        <smtpHost>${HOST}</smtpHost>
+        <smtpPort>${PORT}</smtpPort>
+        <username>${USERNAME}</username>
+        <password>${PASSWORD}</password>
+        <to>${TO}</to>
+        <from>${NICKNAME}&lt;${USERNAME}&gt;</from>
+        <subject>有bug咯</subject>
+        <layout class="ch.qos.logback.classic.html.HTMLLayout">
+            <Pattern>${ENV}%X{user}%date%level%thread%logger{0}%line%message</Pattern>
+        </layout>
+        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
+            <!-- 每个电子邮件只发送一个日志条目 -->
+            <bufferSize>1</bufferSize>
+        </cyclicBufferTracker>
+    </appender>
+
+    <!-- 指定特定包下可以输出的最低级别的日志 -->
+    <!-- swagger(不希望展示)  -->
+    <logger name="springfox.documentation.spring.web" level="ERROR" />
+
+    <!-- ebean sql -->
+    <logger name="io.ebean.SQL" level="DEBUG" />
+
+    <!-- ebean transaction -->
+    <logger name="io.ebean.txn" level="DEBUG" />
+
     <!-- 以上的appender标签只是定义，实际起作用还要配置到这里 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE_NOT_ERROR"/>
         <appender-ref ref="CONSOLE_ERROR"/>
         <appender-ref ref="ASYNC-FILE"/>
     </root>
-
-    <!-- 指定特定包下可以输出的最低级别的日志 -->
-    <logger name="priv.wmc" level="INFO" />
 
 </configuration>

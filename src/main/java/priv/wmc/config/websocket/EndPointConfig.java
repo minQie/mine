@@ -10,7 +10,6 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
  * @author 王敏聪
  * @date 2020/1/12 21:25
  */
-
 @Component
 public class EndPointConfig {
 

@@ -1,7 +1,7 @@
 package priv.wmc.web.controller;
 
 import priv.wmc.pojo.form.MailForm;
-import priv.wmc.service.MailService;
+import priv.wmc.config.notify.EmailSender;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.io.File;
 @RequestMapping("/common/email")
 public class MailController {
 
-    private final MailService mailService;
+    private final EmailSender emailSender;
 
     /**
      * 发送邮件接口（支持附件）
@@ -32,7 +32,7 @@ public class MailController {
     @PostMapping("/sendEmail")
     public boolean sendEmail(@RequestBody @Valid MailForm form, @RequestPart(value = "attachment", required = false) File attachment) {
         try {
-            mailService.sendSimpleTextWithAttachment(form.getSendTo(), form.getSubject(), form.getContent(), attachment);
+            emailSender.sendSimpleTextWithAttachment(form.getSendTo(), form.getSubject(), form.getContent(), attachment);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
