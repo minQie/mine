@@ -1,6 +1,7 @@
 package priv.wmc.config.auth;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -73,13 +74,9 @@ public class MySecureConfig extends WebSecurityConfigurerAdapter {
             // 4、定义登录时，用户密码字段名，默认为 password
             .passwordParameter("passwd")
             // 定义登录成功的处理器
-            .successHandler((req, resp, authentication) -> {
-                this.successHandle(resp);
-            })
+            .successHandler((req, resp, authentication) -> this.successHandle(resp))
             // 定义登录失败的处理器
-            .failureHandler((req, resp, exception) -> {
-                this.failHandle(resp);
-            })
+            .failureHandler((req, resp, exception) -> this.failHandle(resp))
             .permitAll()
             .and()
             // 三、登出相关
@@ -87,9 +84,7 @@ public class MySecureConfig extends WebSecurityConfigurerAdapter {
             // 定义登出接口
             .logoutUrl("/logout")
             // 定义登出失败的处理器
-            .logoutSuccessHandler((req, resp, authentication) -> {
-                this.successHandle(resp);
-            })
+            .logoutSuccessHandler((req, resp, authentication) -> this.successHandle(resp))
             .permitAll()
             .and()
             // 四、允许跨域请求
@@ -99,14 +94,15 @@ public class MySecureConfig extends WebSecurityConfigurerAdapter {
     }
 
     private void successHandle(HttpServletResponse response) throws IOException {
-        response.setContentType("application/json;charset=utf-8");
+        // 过时是因为谷歌浏览器针对JSON默认能够支持UTF-8不用特别指定，但是为了兼顾未升级浏览器的用户
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         PrintWriter out = response.getWriter();
         out.write("success");
         out.flush();
     }
 
     private void failHandle(HttpServletResponse response) throws IOException {
-        response.setContentType("application/json;charset=utf-8");
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         PrintWriter out = response.getWriter();
         out.write("logout success");
         out.flush();

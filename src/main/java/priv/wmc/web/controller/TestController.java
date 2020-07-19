@@ -1,6 +1,6 @@
 package priv.wmc.web.controller;
 
-import priv.wmc.common.enums.MyEnumInterface;
+import priv.wmc.common.enums.EnumDefine;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +26,7 @@ public class TestController {
 }
 
 @AllArgsConstructor
-enum TestEnum implements MyEnumInterface {
+enum TestEnum implements EnumDefine {
 
     /** 默认 */
     DEFAULT(0, "默认");

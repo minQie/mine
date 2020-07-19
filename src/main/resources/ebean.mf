@@ -1,3 +1,0 @@
-entity-packages: priv.wmc.common.domain priv.wmc.domain
-transactional-packages: priv.wmc
-querybean-packages: priv.wmc

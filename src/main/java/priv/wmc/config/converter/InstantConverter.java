@@ -13,9 +13,9 @@ import java.time.format.DateTimeParseException;
  */
 public class InstantConverter implements Converter<String, Instant> {
 
-    final private DateTimeFormatter formatter;
+    private final DateTimeFormatter formatter;
 
-    final private String pattern;
+    private final String pattern;
 
     public InstantConverter(String pattern, String timeZone) {
         this.pattern = pattern;

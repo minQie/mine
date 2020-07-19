@@ -2,7 +2,7 @@ package priv.wmc.config.swagger2;
 
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
-import priv.wmc.common.enums.MyEnumInterface;
+import priv.wmc.common.enums.EnumDefine;
 import priv.wmc.common.verify.Verify;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * 将swagger2的自定生成api文档功能，拓展适配当前项目的一些自定义配置以及jsr303非空
  * <p>
- * 1、FtEnum类型：正确解析
+ * 1、EnumDefine类型：正确解析
  * 2、jsr303非空支持
  *
  * @author 王敏聪
@@ -65,10 +65,10 @@ public class SwaggerDisplayConfig implements ModelPropertyBuilderPlugin {
         AnnotatedField field = context.getBeanPropertyDefinition().get().getField();
         Class<?> fieldRawType = field.getRawType();
         // 自定义枚举支持
-        if (MyEnumInterface.class.isAssignableFrom(fieldRawType)) {
-            MyEnumInterface[] values = (MyEnumInterface[]) fieldRawType.getEnumConstants();
+        if (EnumDefine.class.isAssignableFrom(fieldRawType)) {
+            EnumDefine[] values = (EnumDefine[]) fieldRawType.getEnumConstants();
             String description = Arrays.stream(values)
-                    .map(myEnumInterface -> myEnumInterface.getValue() + ":" + myEnumInterface.getDescription())
+                    .map(enumDefine -> enumDefine.getValue() + ":" + enumDefine.getDescription())
                     .collect(Collectors.joining(", "));
 
             Field mField = ModelPropertyBuilder.class.getDeclaredField("description");

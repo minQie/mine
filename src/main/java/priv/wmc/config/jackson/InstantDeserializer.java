@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import priv.wmc.config.StaticConfig;
+import priv.wmc.constant.StaticConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.jackson.JsonComponent;
 
@@ -24,7 +24,7 @@ import java.time.format.DateTimeParseException;
 @JsonComponent
 public class InstantDeserializer extends JsonDeserializer<Instant> {
 
-    final private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(StaticConfig.DATE_TIME_PATTERN).withZone(ZoneId.of("Asia/Shanghai"));
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(StaticConfig.DATE_TIME_PATTERN).withZone(ZoneId.of("Asia/Shanghai"));
 
     @Override
     public Instant deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {

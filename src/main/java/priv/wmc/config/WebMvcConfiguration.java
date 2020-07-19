@@ -1,15 +1,25 @@
 package priv.wmc.config;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import lombok.Data;
+import org.hibernate.validator.HibernateValidator;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
+import org.springframework.http.HttpMethod;
+import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import priv.wmc.config.converter.EnumConverterFactory;
 import priv.wmc.config.converter.InstantConverter;
 
 import java.time.format.DateTimeFormatter;
+import priv.wmc.config.schedule.SchedulingCondition;
+import priv.wmc.constant.StaticConfig;
 
 /**
  *
@@ -39,16 +49,47 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         registry.addConverterFactory(new EnumConverterFactory());
     }
 
+    /**
+     * 跨域支持
+     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // 允许跨域访问
         registry.addMapping("/api/**")
-            // 以下都可以使用 * 表示不限制
             .allowedOrigins("*")
+            .allowCredentials(true)
             .allowedHeaders("content-type, authorization")
-            .allowedMethods("POST", "GET", "PUT", "DELETE", "OPTIONS", "PATCH");
-            // 是否允许发送Cookie
-            // .allowCredentials(true)
+            .allowedMethods(
+                HttpMethod.GET.name(),
+                HttpMethod.POST.name(),
+                HttpMethod.PUT.name(),
+                HttpMethod.DELETE.name(),
+                // 浏览器发起是否支持跨域请求的请求方式
+                HttpMethod.OPTIONS.name(),
+                HttpMethod.PATCH.name()
+            );
+    }
+
+    /**
+     * JSR303的校验器<br>
+     * @see priv.wmc.common.utils.ValidateUtils
+     */
+    @Bean
+    public Validator validator() {
+        ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
+            .configure()
+            .addProperty("hibernate.validator.fail_fast", "false")
+            .buildValidatorFactory();
+        return validatorFactory.getValidator();
+    }
+
+    /**
+     * Spring定时任务的开关<br>
+     * @see SchedulingCondition
+     */
+    @Bean
+    @Conditional(SchedulingCondition.class)
+    public ScheduledAnnotationBeanPostProcessor scheduledAnnotationProcessor() {
+        return new ScheduledAnnotationBeanPostProcessor();
     }
 
 }

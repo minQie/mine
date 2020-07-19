@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 注意测试配置文件，不要将日志输出语句放在"SpringApplication.run(args)之前，会都打印的" -->
+<!--
+scan：配置文件发生改动，会重新加载
+scanPeriod：设置每过多少秒检测配置文件有没有改动
+debug：是否打印logback框架的日志
+-->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!-- 设置上下文名称
+        每个logger都关联到logger上下文，默认上下文名称为“default”
+        但可以使用设置成其他名字，用于区分不同应用程序的记录。一旦设置，不能修改
+    -->
+    <contextName>core</contextName>
+
+    <!-- 引入默认的日志配置 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+    <!-- 其他1、jmx动态控制日志级别(springboot Admin) -->
+    <!-- <jmxConfigurator/> -->
+
+    <!-- 读取主配置文件中配置 -->
+    <springProperty scope="context" name="ENV" source="spring.profiles.active"/>
+
+    <!-- 其他2、定义变量，FILE输出指定路径使用改变量 --> -->
+    <property name="LOG_HOME" value="/project/mes/${ENV}/log" />
+
+    <!-- 定义输出到控制台的日志级别、格式等（相同目标的Appender可以有多个） -->
+    <appender name ="CONSOLE_NOT_ERROR" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 配置影响的级别：appender中的filter有两种方式配置“ThresholdFilter”和“LevelFilter” -->
+        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+            <!--<level>INFO</level>-->
+        <!--</filter>-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <!-- 匹配的级别接受 -->
+            <onMatch>DENY</onMatch>
+            <!-- 不匹配的级别：不接受 -->
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>
+                <!-- 资料来源：
+                    1、测试
+                    2、log4j2的笔记
+                    3、源码：ch.qos.logback.classic.PatternLayout
+                    4、官方文档：http://logback.qos.ch/manual/layouts.html
+                 -->
+                <!-- 1、颜色
+                    %clr(日志内容){颜色：faint黑色、cyan橄榄蓝、magenta紫红}：将小括号的内容以指定的颜色输出
+                    %clr(日志内容)：将小括号的内容以当前日志级别的颜色输出：TRACE、DEBUG、INFO green、WARN  yellow、ERROR、FATAL red
+                    这样给日志上色最简单：%颜色(日志内容) - 但是实际出现了，本地没问题，mes出现了这样上色出现乱码的情况
+                 -->
+
+                <!-- 2、默认的日志格式及字符的特殊含义：
+                    ${CONSOLE_LOG_PATTERN:-
+                        %clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint}
+                        %clr(${LOG_LEVEL_PATTERN:-%5p}) - %p：大写的日志级别、5：限制最多5个字符、-：右对齐
+                        %clr(${PID:- }){magenta} - 没有PID时输出“-”
+                        %clr(-&#45;&#45;){faint} - “&#45;”就是“-”
+                        %clr([%15.15t]){faint} - %t：线程名、15.15：最少15个字符且最多15个字符
+                        %clr(%-40.40logger{39}){cyan} - %logger：类名
+                        %clr(:){faint} %m%n
+                        ${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
+                    }
+
+                    %cn=%contextName：上下文名称
+                    %d = %date：时间 制定格式简单写法：%d{yyyy-MM-dd HH:mm:ss}
+                    %p=%le=%level：日志级别 一般写法：%-5p
+                    %t = %thread：线程名
+                    %F=%file：文件名
+                    %logger{长度}：输出日志的完整类名 没有大括号：展示完整类名、{0}：只展示类名、其他按照给定的长度尽可能展示完整类名
+                    %M=%method：方法名
+                    %L=%line：行号
+                    %m=%msg=%message：日志内容
+                    %n：换行
+                    %X{key}=%mdc{key}：从MDC中根据键取值
+                    %ex{数字}=%exception{数字}=%throwable{数字}：异常相关 %ex=%ex{full}：完整异常堆栈信息、%ex{short}：只展示异常信息及抛出类的一层堆栈信息、其他：数字几就最大几层堆栈
+                    %xEx=%xException=%xThrowable：同上，就是多了jar信息
+                    %property{key}：取得定义的变量的值
+                    %replace(日志内容){正则, 匹配的要替换成的字符串}：替换日志内容中的指定字符
+                 -->
+
+                %d{yyyy-MM-dd HH:mm:ss} %clr(%-5p) | %cyan(%-40.40logger{39} %4L) | %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
+            </pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name ="CONSOLE_ERROR" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %clr(%-5p) | %cyan(%-40.40logger{39} %4L) | %clr(%m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx})
+            </pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 输出到文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 文件路径 -->
+        <File>${LOG_HOME}\study\logs\today.log</File>
+        <encoder>
+            <pattern>%date [%level] [%thread] %logger{60} [%file : %line] %msg%n</pattern>
+            <!-- 想知道这个配置怎么来的？见RollingFileAppender的父类LayoutWrappingEncoder -->
+            <!-- <charset class="java.nio.charset.Charset">UTF-8</charset> -->
+            <charset>UTF-8</charset>
+        </encoder>
+        <!-- 日志策略（每天产生一个日志文件） -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志命名:单个文件大于2MB 按照时间+自增i 生成log文件 -->
+            <!-- ps：指定文件名：结尾添加".gz"会启用压缩 -->
+            <fileNamePattern>D:\Working-Temp\study\logs\%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>2MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 最大日志保存天数：保留30天日志 -->
+            <maxHistory>30</maxHistory>
+
+        </rollingPolicy>
+
+        <!-- true叠加还是false替换，当然是true啊，没什么用的配置 -->
+        <append>true</append>
+    </appender>
+
+    <!-- 异步方式输出到文件：可以按包装设计模式的方式去理解 -->
+    <appender name="ASYNC-FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志（默认队列80%已满，丢弃TRACE、DEBUG、INFO级别的日志） -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认队列的深度，默认256（会影响性能） -->
+        <queueSize>256</queueSize>
+        <!-- 指定要包装的appender，最多只能添加一个 -->
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <!-- Mail：想要使用，需要引入好相关的邮件配置（在主配置文件中配，然后引入） -->
+    <appender name="MAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+        <!-- 过滤掉不含异常信息的 -->
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <!-- evaluator默认JaninoEventEvaluator，所以想要正常使用需要引用一个jar（否则没有任何异常提示的项目推出） -->
+            <evaluator>
+                <expression>level >= ERROR &amp;&amp; throwable != null</expression>
+            </evaluator>
+            <OnMatch>ACCEPT</OnMatch>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+        <asynchronousSending>true</asynchronousSending>
+        <SSL>true</SSL>
+        <smtpHost>${HOST}</smtpHost>
+        <smtpPort>${PORT}</smtpPort>
+        <username>${USERNAME}</username>
+        <password>${PASSWORD}</password>
+        <to>${TO}</to>
+        <from>${NICKNAME}&lt;${USERNAME}&gt;</from>
+        <subject>有bug咯</subject>
+        <layout class="ch.qos.logback.classic.html.HTMLLayout">
+            <Pattern>${ENV}%X{user}%date%level%thread%logger{0}%line%message</Pattern>
+        </layout>
+        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
+            <!-- 每个电子邮件只发送一个日志条目 -->
+            <bufferSize>1</bufferSize>
+        </cyclicBufferTracker>
+    </appender>
+
+    <!-- 指定特定包下可以输出的最低级别的日志 -->
+    <!-- swagger(不希望展示)  -->
+    <logger name="springfox.documentation.spring.web" level="ERROR" />
+
+    <!-- ebean sql -->
+    <logger name="io.ebean.SQL" level="DEBUG" />
+
+    <!-- ebean transaction -->
+    <logger name="io.ebean.txn" level="DEBUG" />
+
+    <!-- 以上的appender标签只是定义，实际起作用还要配置到这里 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_NOT_ERROR"/>
+        <appender-ref ref="CONSOLE_ERROR"/>
+        <appender-ref ref="ASYNC-FILE"/>
+    </root>
+
+</configuration>
