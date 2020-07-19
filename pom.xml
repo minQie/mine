@@ -13,27 +13,25 @@
   <groupId>priv.wmc</groupId>
   <artifactId>mine</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>mime</name>
+  <name>mine</name>
   <description>总结一些学习到的项目中的模板</description>
 
   <properties>
+    <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>1.8</java.version>
     <!-- package时跳过test -->
     <skipTests>true</skipTests>
 
     <!-- 依赖版本管理 -->
-    <!-- cxf-spring-boot-starter-jaxws -->
-    <cxf.version>3.3.5</cxf.version>
     <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
     <swagger-bootstrap-ui.version>1.9.5</swagger-bootstrap-ui.version>
     <swagger-models.version>1.5.22</swagger-models.version>
 
-    <ebean.version>11.36.4</ebean.version>
+    <ebean.version>12.1.10</ebean.version>
     <ebean-spring-txn.version>11.10.4</ebean-spring-txn.version>
-    <ebean-querybean.version>11.36.3</ebean-querybean.version>
-    <querybean-generator.version>11.36.1</querybean-generator.version>
+    <ebean-querybean.version>12.1.10</ebean-querybean.version>
+    <querybean-generator.version>12.1.10</querybean-generator.version>
 
     <commons-io.version>2.5</commons-io.version>
     <commons-lang3.version>3.4</commons-lang3.version>
@@ -90,13 +88,6 @@
         <scope>compile</scope>
       </dependency>
 
-      <!-- webservice -->
-      <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
-        <version>${cxf.version}</version>
-      </dependency>
-
       <!-- io流工具 -->
       <dependency>
         <groupId>commons-io</groupId>
@@ -111,21 +102,21 @@
         <version>${commons-lang3.version}</version>
       </dependency>
 
-      <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+      <!-- jsoup -->
       <dependency>
         <groupId>org.jsoup</groupId>
         <artifactId>jsoup</artifactId>
         <version>${jsoup.version}</version>
       </dependency>
 
-      <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+      <!-- fastjson -->
       <dependency>
         <groupId>com.alibaba</groupId>
         <artifactId>fastjson</artifactId>
         <version>${fastjson.version}</version>
       </dependency>
 
-      <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+      <!-- guava -->
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
@@ -135,56 +126,45 @@
   </dependencyManagement>
 
   <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-integration</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-mail</artifactId>
-    </dependency>
-    <!--  actuator 指标监控：没有这个访问“/actuator”就不会跳转到登录页面 -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
+    <!-- Springboot web -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+    <!-- Spring security -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <scope>runtime</scope>
-      <optional>true</optional>
+      <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
+    <!-- redis -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.junit.vintage</groupId>
-          <artifactId>junit-vintage-engine</artifactId>
-        </exclusion>
-      </exclusions>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
     </dependency>
+    <!-- actuator 指标监控：没有这个访问“/actuator”就不会跳转到登录页面 -->
     <dependency>
-      <groupId>org.springframework.integration</groupId>
-      <artifactId>spring-integration-test</artifactId>
-      <scope>test</scope>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
+    <!-- 配置提示 -->
     <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-test</artifactId>
-      <scope>test</scope>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <!-- 记录条件注入bean的结果，提高项目启动速度 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure-processor</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <!-- Spring mail -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-mail</artifactId>
     </dependency>
 
-    <!-- dao层 -->
+    <!-- dao -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
@@ -227,20 +207,33 @@
       <artifactId>swagger-models</artifactId>
     </dependency>
 
+    <!-- Spring test -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <!-- websocket -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-websocket</artifactId>
-    </dependency>
-    <!-- webservice -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web-services</artifactId>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-spring-boot-starter-jaxws -->
-    <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
     </dependency>
 
     <!-- lombok -->
@@ -262,19 +255,19 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+    <!-- jsoup -->
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+    <!-- fastjson -->
     <dependency>
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+    <!-- guava -->
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
@@ -296,17 +289,29 @@
   </dependencies>
 
   <build>
-    <finalName>audit</finalName>
+    <finalName>mine</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.3.1.RELEASE</version>
         <configuration>
           <!-- 项目打成jar，把本地jar包也引入进去 -->
           <includeSystemScope>true</includeSystemScope>
+          <!--
+          不把相关的jar包打进最终的jar包里
+          要用的jar包已经实现上传到服务器了，运行这里打的jar包，指定好引用的jar路径参数：-Dloader.path=/.../lob
+           -->
+<!--          <includes>-->
+<!--            <include>-->
+<!--              <groupId>nothing</groupId>-->
+<!--              <artifactId>nothing</artifactId>-->
+<!--            </include>-->
+<!--          </includes>-->
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>1.8</source>

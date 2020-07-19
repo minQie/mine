@@ -1,36 +1,28 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**
-!**/src/test/**
+# Compiled file
+*.class
+/target/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Package file
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# Log file
+*.log
+
+# About IntelliJ
 *.iml
-*.ipr
+/.idea/
+/out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
+# 开发者自定义本地配置文件
+application-custom*.yaml
+
+# 进程id文件
+*.pid
 
 ### VS Code ###
 .vscode/
-
-### Customize ###
-*.log
-*.sql
-*.pid

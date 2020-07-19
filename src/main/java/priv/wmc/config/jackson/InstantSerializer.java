@@ -3,7 +3,7 @@ package priv.wmc.config.jackson;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import priv.wmc.common.util.DateUtils;
+import priv.wmc.common.utils.DateUtils;
 import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;

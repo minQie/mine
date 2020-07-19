@@ -1,6 +1,6 @@
 package priv.wmc.config.converter;
 
-import priv.wmc.common.enums.MyEnumInterface;
+import priv.wmc.common.enums.EnumDefine;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 
@@ -8,14 +8,14 @@ import org.springframework.core.convert.converter.ConverterFactory;
  * @author 王敏聪
  * @date 2020-01-21 23:05:38
  */
-public class EnumConverterFactory implements ConverterFactory<String, MyEnumInterface> {
+public class EnumConverterFactory implements ConverterFactory<String, EnumDefine> {
 
     @Override
-    public <T extends MyEnumInterface> Converter<String, T> getConverter(Class<T> targetType) {
+    public <T extends EnumDefine> Converter<String, T> getConverter(Class<T> targetType) {
         return new ValueEnumConverter<T>(targetType);
     }
 
-    class ValueEnumConverter<T extends MyEnumInterface> implements Converter<String, T> {
+    static class ValueEnumConverter<T extends EnumDefine> implements Converter<String, T> {
         private final Class<T> type;
 
         public ValueEnumConverter(Class<T> type) {

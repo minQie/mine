@@ -1,7 +1,7 @@
 package priv.wmc.web.controller;
 
 import priv.wmc.pojo.form.MailForm;
-import priv.wmc.config.notify.EmailSender;
+import priv.wmc.modules.notify.EmailSender;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

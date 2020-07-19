@@ -36,11 +36,8 @@ logging:
   pattern:
     # 指定时间格式
     dateformat: yyyy-MM-dd HH:mm:ss
-
     # 指定输出到控制台的日志格式
 #    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%15.15t] %-40.40c{1.} [%X{user}] : %m%n%xwEx"
-#    # 指定输出到文件的日志格式
-#    # file:
 
 spring:
 #   # springboot的异步，是基于jdk的动态代理实现的，即基于接口，那么编写的类就不能使用接口了，所以修改默认的动态代理策略为CGLIB，即基于类，也可以在@EnableAsync注解上配置

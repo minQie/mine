@@ -16,7 +16,7 @@ import static java.lang.annotation.ElementType.*;
  * @Author 王敏聪
  * @Date 2019/11/6 11:43
  */
-@Constraint(validatedBy = CoreValidator.class)
+@Constraint(validatedBy = StringValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 public @interface Verify {

@@ -21,7 +21,6 @@ package priv.wmc.config.swagger2;
 
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Strings.emptyToNull;
-import static com.google.common.collect.Lists.transform;
 import static springfox.documentation.swagger.common.SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER;
 import static springfox.documentation.swagger.readers.parameter.Examples.examples;
 
@@ -32,11 +31,12 @@ import io.swagger.annotations.ApiParam;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import priv.wmc.common.enums.MyEnumInterface;
-import priv.wmc.common.util.MyEnumUtils;
+import priv.wmc.common.enums.EnumDefine;
+import priv.wmc.common.utils.EnumUtils;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.AllowableListValues;
@@ -101,8 +101,8 @@ public class CustomSwaggerExpandedParameterBuilder extends SwaggerExpandedParame
     ParameterBuilder parameterBuilder = maybeSetParameterName(context, apiParam.name());
 
     String description = descriptions.resolve(apiParam.value());
-    if (MyEnumUtils.isMyEnum(context.getFieldType().getErasedType())) {
-      description += MyEnumUtils.getDescription(context.getFieldType().getErasedType());
+    if (EnumUtils.isMyEnum(context.getFieldType().getErasedType())) {
+      description += EnumUtils.getDescription(context.getFieldType().getErasedType());
       parameterBuilder.modelRef(new ModelRef("int"));
     }
 
@@ -129,8 +129,8 @@ public class CustomSwaggerExpandedParameterBuilder extends SwaggerExpandedParame
     ParameterBuilder parameterBuilder = maybeSetParameterName(context, apiModelProperty.name());
 
     String description = descriptions.resolve(descriptions.resolve(apiModelProperty.value()));
-    if (MyEnumUtils.isMyEnum(context.getFieldType().getErasedType())) {
-      description += MyEnumUtils.getDescription(context.getFieldType().getErasedType());
+    if (EnumUtils.isMyEnum(context.getFieldType().getErasedType())) {
+      description += EnumUtils.getDescription(context.getFieldType().getErasedType());
       parameterBuilder.modelRef(new ModelRef("int"));
     }
 
@@ -165,10 +165,12 @@ public class CustomSwaggerExpandedParameterBuilder extends SwaggerExpandedParame
 
   private List<String> getEnumValues(final Class<?> subject) {
     // custom
-    Function<Object, String> function = !MyEnumUtils.isMyEnum(subject)
+    Function<Object, String> function = !EnumUtils.isMyEnum(subject)
         ? Object::toString
-        : obj -> String.valueOf(((MyEnumInterface)obj).getValue());
+        : obj -> String.valueOf(((EnumDefine)obj).getValue());
 
-    return transform(Arrays.asList(subject.getEnumConstants()), function::apply);
+    // 这样也行，这个"<Object>"是什么意思
+//    return Arrays.<Object>stream(subject.getEnumConstants()).map(function).collect(Collectors.toList());
+    return Arrays.stream(subject.getEnumConstants()).map(function).collect(Collectors.toList());
   }
 }

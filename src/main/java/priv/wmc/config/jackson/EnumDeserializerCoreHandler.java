@@ -23,7 +23,9 @@ import java.util.Optional;
  * @date 2020-01-16 09:24:39
  */
 @Slf4j
-class EnumDeserializerCoreHandler {
+final class EnumDeserializerCoreHandler {
+
+    private EnumDeserializerCoreHandler() {}
 
     /**
      * 从jsonParser的反序列化上下文中获取要反序列化的字段类型
@@ -31,7 +33,7 @@ class EnumDeserializerCoreHandler {
     static Type getRealEnumInvolvedType(JsonParser jsonParser) throws IOException {
         // 调试发现，枚举类型没有被集合或者其他容器修饰时，字段名称可以直接通过“getCurrentName”方法获取到，否则为空，故由该规律得出下面的逻辑
 
-        // 找到的字段的类型是：Enum<? extends MyEnumInterface>
+        // 找到的字段的类型是：Enum<? extends EnumDefine>
         if (jsonParser.getCurrentName() != null) {
             Class<?> formClass = jsonParser.getCurrentValue().getClass();
             String fieldName = jsonParser.getCurrentName();
@@ -40,7 +42,7 @@ class EnumDeserializerCoreHandler {
 
             return field.getType();
 
-        // 找到的字段类型是：Collection<Enum<? extends MyEnumInterface>>
+        // 找到的字段类型是：Collection<Enum<? extends EnumDefine>>
         } else {
             JsonStreamContext parsingContext = jsonParser.getParsingContext().getParent();
             Class<?> formClass = parsingContext.getCurrentValue().getClass();
@@ -61,7 +63,7 @@ class EnumDeserializerCoreHandler {
      * @return 字段
      * @exception ApiException 没有找到
      */
-    private static Field getAppropriateDeserializeField(Class clazz, String fieldName) throws ApiException {
+    private static Field getAppropriateDeserializeField(Class<?> clazz, String fieldName) {
         // 1、根据 字段名 查找字段
         Field collectionField = ReflectionUtils.findField(clazz, fieldName);
         if (collectionField != null) {
@@ -79,7 +81,7 @@ class EnumDeserializerCoreHandler {
             return fieldOptional.get();
         }
         // 没有找到
-        log.error("反序列化失败 - 无法定位到字段（类型：Collection<Enum<? extends MyEnumInterface>>，字段名：{}）", fieldName);
+        log.error("反序列化失败 - 无法定位到字段（类型：Collection<Enum<? extends EnumDefine>>，字段名：{}）", fieldName);
         throw new ApiException(ApiErrorCodes.ENUM_DESERIALIZE_FAIL, "请通知相应的后台开发人员");
     }
 

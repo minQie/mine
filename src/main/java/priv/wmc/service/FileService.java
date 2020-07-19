@@ -2,12 +2,12 @@ package priv.wmc.service;
 
 import priv.wmc.common.exception.ApiErrorCodes;
 import priv.wmc.common.exception.ApiException;
-import priv.wmc.common.util.DateUtils;
-import priv.wmc.common.util.FileUtils;
-import priv.wmc.common.util.UploadFileUtils;
-import priv.wmc.common.util.UploadUtils;
+import priv.wmc.common.utils.DateUtils;
+import priv.wmc.common.utils.FileUtils;
+import priv.wmc.common.utils.UploadFileUtils;
+import priv.wmc.common.utils.UploadUtils;
 import priv.wmc.config.AppConfig;
-import priv.wmc.config.StaticConfig;
+import priv.wmc.constant.StaticConfig;
 import priv.wmc.domain.UploadFile;
 import priv.wmc.domain.query.QUploadFile;
 import org.springframework.stereotype.Service;
