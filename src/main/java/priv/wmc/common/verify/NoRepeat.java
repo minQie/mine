@@ -12,6 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
+import priv.wmc.common.verify.validator.ListValidator;
 
 /**
  * 修饰请求参数类型为List，对包含的元素是否有重复进行校验

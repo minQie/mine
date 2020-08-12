@@ -1,14 +1,18 @@
 package priv.wmc.web.controller;
 
-import priv.wmc.common.enums.EnumDefine;
-import lombok.AllArgsConstructor;
+import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collection;
 
 /**
  * @author 王敏聪
@@ -16,26 +20,18 @@ import java.util.Collection;
  */
 @RequestMapping("/test")
 @RestController
+@Validated
 public class TestController {
 
-    @GetMapping
-    public boolean test(TestForm testForm) {
-        return true;
+    @GetMapping("/get/{id}")
+    public void getTest(@PathVariable @Min(10) Long id, @Min(10) Integer index) {
+
     }
 
-}
+    @PostMapping("/post")
+    public void postTest(@Valid @RequestBody List<TestForm> forms) {
 
-@AllArgsConstructor
-enum TestEnum implements EnumDefine {
-
-    /** 默认 */
-    DEFAULT(0, "默认");
-
-    @Getter
-    int value;
-
-    @Getter
-    String description;
+    }
 
 }
 
@@ -43,8 +39,7 @@ enum TestEnum implements EnumDefine {
 @Setter
 class TestForm {
 
-    TestEnum testEnum;
-
-    Collection<TestEnum> collection;
+    @NotNull
+    String text;
 
 }

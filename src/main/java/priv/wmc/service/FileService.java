@@ -8,13 +8,13 @@ import priv.wmc.common.utils.UploadFileUtils;
 import priv.wmc.common.utils.UploadUtils;
 import priv.wmc.config.AppConfig;
 import priv.wmc.constant.StaticConfig;
-import priv.wmc.domain.UploadFile;
-import priv.wmc.domain.query.QUploadFile;
+import priv.wmc.pojo.entity.UploadFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import priv.wmc.pojo.entity.query.QUploadFile;
 
 /**
  * @author 王敏聪
@@ -32,7 +32,7 @@ public class FileService {
      */
     public String save(MultipartFile file) throws IOException {
         // 1、准备保存文件的文件夹
-        String relativeDirectoryPath = DateUtils.getDateString(StaticConfig.DATE_PATTERN) + "/";
+        String relativeDirectoryPath = DateUtils.getDateString(StaticConfig.DATE_PATTERN) + File.separator;
         File uploadDirectory = UploadUtils.getUploadDirectory(relativeDirectoryPath);
 
         // 2、保存文件

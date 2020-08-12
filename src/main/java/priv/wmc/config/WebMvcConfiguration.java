@@ -1,5 +1,6 @@
 package priv.wmc.config;
 
+import java.time.format.DateTimeFormatter;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -16,8 +17,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import priv.wmc.config.converter.EnumConverterFactory;
 import priv.wmc.config.converter.InstantConverter;
-
-import java.time.format.DateTimeFormatter;
 import priv.wmc.config.schedule.SchedulingCondition;
 import priv.wmc.constant.StaticConfig;
 
@@ -71,13 +70,14 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     /**
      * JSR303的校验器<br>
-     * @see priv.wmc.common.utils.ValidateUtils
      */
     @Bean
     public Validator validator() {
         ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
             .configure()
-            .addProperty("hibernate.validator.fail_fast", "false")
+            // failFast：校验时，是全部校验完统计错误信息；还是校验到错误信息，就直接返回
+//            .addProperty("hibernate.validator.fail_fast", "false")
+            .failFast(false)
             .buildValidatorFactory();
         return validatorFactory.getValidator();
     }

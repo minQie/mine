@@ -1,23 +1,27 @@
 package priv.wmc.common.exception.result;
 
-import priv.wmc.common.exception.core.ApiError;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import priv.wmc.common.exception.ApiError;
 
 /**
- * 错误结果集
+ * 错误信息字段：message
  *
  * @author 王敏聪
  * @date 2019/11/18 9:32
  */
 @Getter
-@RequiredArgsConstructor
 public class ApiBasicExceptionResult implements ApiError {
 
+    private final int code;
     private final String message;
 
     public ApiBasicExceptionResult(ApiError apiError) {
-        this(apiError.getMessage());
+        this(apiError.getCode(), apiError.getMessage());
+    }
+
+    public ApiBasicExceptionResult(int code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
 }
