@@ -1,14 +1,18 @@
 package priv.wmc.web.controller;
 
-import priv.wmc.pojo.form.MailForm;
-import priv.wmc.modules.notify.EmailSender;
 import io.swagger.annotations.Api;
+import java.io.File;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.io.File;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import priv.wmc.module.notify.EmailSender;
+import priv.wmc.pojo.dto.form.MailFormDTO;
 
 /**
  * 邮件服务
@@ -16,6 +20,7 @@ import java.io.File;
  * @author 王敏聪
  * @date 2019/11/27 18:39
  */
+@ConditionalOnBean(EmailSender.class)
 @Api(tags = "邮件服务")
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -30,7 +35,7 @@ public class MailController {
      * @return 是否成功
      */
     @PostMapping("/sendEmail")
-    public boolean sendEmail(@RequestBody @Valid MailForm form, @RequestPart(value = "attachment", required = false) File attachment) {
+    public boolean sendEmail(@RequestBody @Valid MailFormDTO form, @RequestPart(value = "attachment", required = false) File attachment) {
         try {
             emailSender.sendSimpleTextWithAttachment(form.getSendTo(), form.getSubject(), form.getContent(), attachment);
         } catch (Exception e) {

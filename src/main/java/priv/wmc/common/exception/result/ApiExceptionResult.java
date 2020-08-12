@@ -1,10 +1,10 @@
 package priv.wmc.common.exception.result;
 
-import priv.wmc.common.exception.core.ApiError;
+import priv.wmc.common.exception.ApiError;
 import lombok.Getter;
 
 /**
- * 带有额外信息的错误结果集
+ * 错误信息字段：message、extraMessage
  *
  * @author 王敏聪
  * @date 2019/11/18 9:32

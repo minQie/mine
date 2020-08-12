@@ -3,7 +3,7 @@ package priv.wmc.common.utils;
 import priv.wmc.common.exception.ApiErrorCodes;
 import priv.wmc.common.exception.ApiException;
 import priv.wmc.config.AppConfig;
-import priv.wmc.domain.UploadFile;
+import priv.wmc.pojo.entity.UploadFile;
 
 /**
  * 拼接UploadFile实体参数的工具类

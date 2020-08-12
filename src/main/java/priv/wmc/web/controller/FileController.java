@@ -4,7 +4,7 @@ import priv.wmc.common.exception.ApiErrorCodes;
 import priv.wmc.common.exception.ApiException;
 import priv.wmc.common.utils.UploadFileUtils;
 import priv.wmc.config.AppConfig;
-import priv.wmc.domain.UploadFile;
+import priv.wmc.pojo.entity.UploadFile;
 import priv.wmc.service.FileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

@@ -4,7 +4,6 @@ import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrap
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
@@ -16,9 +15,14 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.core.env.StandardEnvironment;
+import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import priv.wmc.module.log.LauncherService;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
@@ -37,46 +41,51 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class App {
 
     public static void main(String[] args) {
-///        SpringApplication.run(App.class, args);
-        // 替代默认的启动方式，项目进程启动后生成pid文件
-        SpringApplication springApplication = new SpringApplication(App.class);
+        SpringApplication springApplication = getDefaultConfigBuilder(App.class, args).build();
+        // 添加pid文件的生成
         springApplication.addListeners(new ApplicationPidFileWriter());
         springApplication.run(args);
     }
 
-    public static SpringApplicationBuilder getDefaultConfigBuilder(String appName, Class<?> source, String... args) {
-        // ---------------项目环境配置
+    public static SpringApplicationBuilder getDefaultConfigBuilder(Class<?> source, String... args) {
         ConfigurableEnvironment environment = new StandardEnvironment();
-        // 获取配置的环境变量
-        String[] activeProfiles = environment.getActiveProfiles();
-        // 判断环境:dev、test、prod
-        List<String> profiles = Arrays.asList(activeProfiles);
-        // 预设的环境
-        List<String> presetProfiles = new ArrayList<>(Arrays.asList("dev", "prod", "test"));
-        // 交集
-        presetProfiles.retainAll(profiles);
+        MutablePropertySources propertySources = environment.getPropertySources();
+        propertySources.addFirst(new SimpleCommandLinePropertySource(args));
+        propertySources.addLast(new MapPropertySource(StandardEnvironment.SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, environment.getSystemProperties()));
+        propertySources.addLast(new SystemEnvironmentPropertySource(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, environment.getSystemEnvironment()));
 
-        String profile = "dev";
+        // 根据参数以及自定义规则，决定实际的运行环境
+        String[] actualProfileArray = environment.getActiveProfiles();
+        List<String> actualProfiles = Arrays.asList(actualProfileArray);
+
+        List<String> presetProfiles = new ArrayList<>(Arrays.asList("dev", "test", "prod"));
+        presetProfiles.retainAll(actualProfiles);
+
+        String profile;
         SpringApplicationBuilder builder = new SpringApplicationBuilder(source);
-        if (presetProfiles.size() == 1) {
+        if (presetProfiles.isEmpty()) {
+            profile = "dev";
+            presetProfiles.add(profile);
+            builder.profiles(profile);
+        } else if (presetProfiles.size() == 1) {
             profile = presetProfiles.get(0);
-        } else if (presetProfiles.size() > 1) {
-            throw new IllegalStateException(String.format("读取到的多个环境变量:[%s]", profiles));
+        } else {
+            throw new RuntimeException("同时存在环境变量:[" + StringUtils.arrayToCommaDelimitedString(actualProfileArray) + "]");
         }
 
         Properties props = System.getProperties();
-        props.setProperty("spring.application.name", appName);
         props.setProperty("spring.profiles.active", profile);
         props.setProperty("file.encoding", StandardCharsets.UTF_8.name());
         props.setProperty("spring.main.allow-bean-definition-overriding", "true");
 
-        // 加载自定义组件
+        // 加载自定义组件：LauncherServiceImpl、LogLauncherServiceImpl
         List<LauncherService> launcherList = new ArrayList<>();
         ServiceLoader.load(LauncherService.class).forEach(launcherList::add);
+
         launcherList.stream()
             .sorted(Comparator.comparing(LauncherService::getOrder))
             .collect(Collectors.toList())
-            .forEach(launcherService -> launcherService.launcher(builder, appName, profile, isLocalDev()));
+            .forEach(launcherService -> launcherService.launcher(builder, profile));
         return builder;
     }
 

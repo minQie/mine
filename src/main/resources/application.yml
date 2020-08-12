@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
   # 资源压缩传输
   compression:
     enabled: true
@@ -18,19 +18,19 @@ server:
     - image/png
 # 日志（默认行为是一天一个日志文件）
 logging:
-  # 按照spring规范要求，单独指定一个logback的配置文件
+#  # 按照spring规范要求，单独指定一个logback的配置文件
 #  config: classpath:logback-spring.xml
-  # 日志输出级别
+#  # 日志输出级别
 #  level:
 #    root: debug
 #    web: debug
-  # 文件策略：文件名、压缩（默认每天压缩一个）
+#  # 文件策略：文件名、压缩（默认每天压缩一个）
 #  file:
-    # 完整文件名
+#    # 完整文件名
 #    name: wmc.log
-    # 超过这个大小，将被压缩
+#    # 超过这个大小，将被压缩
 #    max-size: 10MB
-    # 日志最大保存天数
+#    # 日志最大保存天数
 #    max-history: 7
   # 日志格式
   pattern:
@@ -45,22 +45,22 @@ spring:
 #    proxy-target-class: true
   pid:
     file: application.pid
-  # 企业微信邮箱服务器
-  mail:
-    # SMTP服务器
-    host: smtp.exmail.qq.com
-    # SMTP服务器秘钥
-    password: GfTzFAJ7aEcUqgbx
-    # 邮件发送者的真实邮箱
-    username: mincong.wang@firstouch.com.cn
-    # 添加如下配置，即采用SMTPS协议发送邮件(465端口)，默认是SMTP协议(25端口)
-    properties:
-      mail:
-        smtp:
-          port: 465
-          auth: true
-          socketFactory:
-            class: javax.net.ssl.SSLSocketFactory
+#  # 企业微信邮箱服务器
+#  mail:
+#    # SMTP服务器
+#    host: smtp.exmail.qq.com
+#    # SMTP服务器秘钥
+#    password: GfTzFAJ7aEcUqgbx
+#    # 邮件发送者的真实邮箱
+#    username: mincong.wang@firstouch.com.cn
+#    # 添加如下配置，即采用SMTPS协议发送邮件(465端口)，默认是SMTP协议(25端口)
+#    properties:
+#      mail:
+#        smtp:
+#          port: 465
+#          auth: true
+#          socketFactory:
+#            class: javax.net.ssl.SSLSocketFactory
 
   # 数据源
   datasource:
@@ -105,14 +105,14 @@ app:
     generate: false
     # 是否生成一个整合文件
     single-file: true
-  # 异常邮件通知
-  exception-mail-notify:
-    # 邮件发送者的昵称
-    nickname: My Bug Reporter
-    # 是否开启发生预期外异常时邮件提示（默认：关闭）
-    'on': true
-    # 发生预期外异常时，要通知的邮箱
-    send-to: mincong.wang@firstouch.com.cn
+#  # 异常邮件通知
+#  exception-mail-notify:
+#    # 邮件发送者的昵称
+#    nickname: My Bug Reporter
+#    # 是否开启发生预期外异常时邮件提示（默认：关闭）
+#    'on': false
+#    # 发生预期外异常时，要通知的邮箱
+#    send-to: mincong.wang@firstouch.com.cn
   # 是否开启swagger
   swagger-enable: true
   # api 文档版本

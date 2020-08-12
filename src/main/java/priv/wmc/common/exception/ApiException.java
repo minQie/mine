@@ -1,6 +1,5 @@
 package priv.wmc.common.exception;
 
-import priv.wmc.common.exception.core.ApiError;
 import lombok.Getter;
 
 /**

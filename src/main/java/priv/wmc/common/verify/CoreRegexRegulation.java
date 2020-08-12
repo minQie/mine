@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * @author 王敏聪
  * @date 2019/11/5 17:27
  */
-final class CoreRegexRegulation {
+public final class CoreRegexRegulation {
 
     private CoreRegexRegulation() {}
 
