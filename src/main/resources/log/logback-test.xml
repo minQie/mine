@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 注意测试配置文件，不要将日志输出语句放在"SpringApplication.run(args)之前，会都打印的" -->
-<!--
-scan：配置文件发生改动，会重新加载
-scanPeriod：设置每过多少秒检测配置文件有没有改动
-debug：是否打印logback框架的日志
--->
-<configuration scan="true" scanPeriod="60 seconds" debug="false">
-</configuration>

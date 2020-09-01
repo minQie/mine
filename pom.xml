@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <packaging>pom</packaging>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -16,6 +17,13 @@
   <name>mine</name>
   <description>总结一些学习到的项目中的模板</description>
 
+  <modules>
+    <module>mybatis-plus-generator</module>
+    <module>main</module>
+    <module>custom-sql-generator</module>
+    <module>common</module>
+  </modules>
+
   <properties>
     <!-- 基本配置信息 -->
     <java.version>1.8</java.version>
@@ -24,16 +32,12 @@
     <skipTests>true</skipTests>
 
     <!-- 依赖版本管理 -->
-    <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
-    <swagger-bootstrap-ui.version>1.9.5</swagger-bootstrap-ui.version>
-    <swagger-models.version>1.5.22</swagger-models.version>
+    <mybatis-plus.version>3.3.2</mybatis-plus.version>
+    <p6spy.version>3.9.1</p6spy.version>
+    <springfox-swagger2.version>3.0.0</springfox-swagger2.version>
+    <knife4j.version>2.0.4</knife4j.version>
 
     <hibernate-validator.version>6.0.1.Final</hibernate-validator.version>
-
-    <ebean.version>12.1.10</ebean.version>
-    <ebean-spring-txn.version>11.10.4</ebean-spring-txn.version>
-    <ebean-querybean.version>12.1.10</ebean-querybean.version>
-    <querybean-generator.version>12.1.10</querybean-generator.version>
 
     <commons-io.version>2.5</commons-io.version>
     <commons-lang3.version>3.4</commons-lang3.version>
@@ -45,50 +49,60 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- ebean -->
+      <!-- 子模块版本定义 -->
       <dependency>
-        <groupId>io.ebean</groupId>
-        <artifactId>ebean</artifactId>
-        <version>${ebean.version}</version>
+        <groupId>priv.wmc</groupId>
+        <artifactId>common</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>io.ebean</groupId>
-        <artifactId>ebean-spring-txn</artifactId>
-        <version>${ebean-spring-txn.version}</version>
+        <groupId>priv.wmc</groupId>
+        <artifactId>main</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>io.ebean</groupId>
-        <artifactId>ebean-querybean</artifactId>
-        <version>${ebean-querybean.version}</version>
+        <groupId>priv.wmc</groupId>
+        <artifactId>custom-sql-generator</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>io.ebean</groupId>
-        <artifactId>querybean-generator</artifactId>
-        <version>${querybean-generator.version}</version>
-        <scope>provided</scope>
+        <groupId>priv.wmc</groupId>
+        <artifactId>mybatis-plus-generator</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
       </dependency>
 
-      <!-- swagger -->
+      <!-- mybatis plus -->
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-boot-starter</artifactId>
+        <version>${mybatis-plus.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-generator</artifactId>
+        <version>${mybatis-plus.version}</version>
+        <optional>true</optional>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/p6spy/p6spy -->
+      <dependency>
+        <groupId>p6spy</groupId>
+        <artifactId>p6spy</artifactId>
+        <version>${p6spy.version}</version>
+      </dependency>
+
+      <!-- swagger2 → swagger3 -->
       <dependency>
         <groupId>io.springfox</groupId>
-        <artifactId>springfox-swagger2</artifactId>
+        <artifactId>springfox-boot-starter</artifactId>
         <version>${springfox-swagger2.version}</version>
       </dependency>
+      <!-- swagger bootstrap ui → knife4j -->
       <dependency>
         <groupId>com.github.xiaoymin</groupId>
-        <artifactId>swagger-bootstrap-ui</artifactId>
-        <version>${swagger-bootstrap-ui.version}</version>
-      </dependency>
-      <!--
-        swagger核心jar已经不更新了！该版本依赖了apache下的1.5.20版本的model，当没有为数字类型设置样例，即为@ApiOperationProperty的example属性设置值
-        那么会在访问swagger文档页面时，会因“io.swagger.models.parameters.AbstractSerializableParameter”的“Long.parse("")”报出错误日志
-        核心jar不更新了，但是model有更新，故只要修改一下版本就不会出现这个问题了
-       -->
-      <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-models</artifactId>
-        <version>${swagger-models.version}</version>
-        <scope>compile</scope>
+        <artifactId>knife4j-spring-boot-starter</artifactId>
+        <version>${knife4j.version}</version>
       </dependency>
 
       <!-- spring-boot-web-start 2.3之后就没有主动引入了 -->
@@ -143,212 +157,11 @@
   </dependencyManagement>
 
   <dependencies>
-    <!-- Springboot web -->
+    <!-- 所有子模块都应该引入common模块 -->
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>priv.wmc</groupId>
+      <artifactId>common</artifactId>
     </dependency>
-    <!-- Spring security -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-    <!-- redis -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-redis</artifactId>
-    </dependency>
-    <!-- actuator 指标监控：没有这个访问“/actuator”就不会跳转到登录页面 -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <!-- 配置提示 -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <!-- 记录条件注入bean的结果，提高项目启动速度 -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure-processor</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <!-- Spring mail -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-mail</artifactId>
-    </dependency>
-
-    <!-- dao -->
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-jdbc</artifactId>
-    </dependency>
-    <!-- ebean -->
-    <dependency>
-      <groupId>io.ebean</groupId>
-      <artifactId>ebean</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.ebean</groupId>
-      <artifactId>ebean-spring-txn</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.ebean</groupId>
-      <artifactId>ebean-querybean</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.ebean</groupId>
-      <artifactId>querybean-generator</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- swagger2 -->
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.github.xiaoymin</groupId>
-      <artifactId>swagger-bootstrap-ui</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-models</artifactId>
-    </dependency>
-
-    <!-- Spring Validation 需要的基础包 -->
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-    </dependency>
-
-    <!-- Spring test -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.junit.vintage</groupId>
-          <artifactId>junit-vintage-engine</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.integration</groupId>
-      <artifactId>spring-integration-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- websocket -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-websocket</artifactId>
-    </dependency>
-
-    <!-- lombok -->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- io工具 -->
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-    </dependency>
-
-    <!-- StringUtil、FieldUtils -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-    </dependency>
-
-    <!-- jsoup -->
-    <dependency>
-      <groupId>org.jsoup</groupId>
-      <artifactId>jsoup</artifactId>
-    </dependency>
-
-    <!-- fastjson -->
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>fastjson</artifactId>
-    </dependency>
-
-    <!-- guava -->
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-    </dependency>
-
-    <!-- google auto service -->
-    <dependency>
-      <groupId>com.google.auto.service</groupId>
-      <artifactId>auto-service</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-
-    <!-- 用maven引入本地的一个自定义jar包 -->
-    <!--<dependency>-->
-    <!--<groupId>dop-sdk-0.0.1-SNAPSHOT</groupId>-->
-    <!--<artifactId>dop-sdk</artifactId>-->
-    <!--<version>0.0.1</version>-->
-    <!--<scope>system</scope>-->
-    <!--<systemPath>${project.basedir}/src/main/resources/lib/dop-sdk-0.0.1-SNAPSHOT.jar</systemPath>-->
-    <!--</dependency>-->
   </dependencies>
-
-  <build>
-    <finalName>mine</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>2.3.1.RELEASE</version>
-        <configuration>
-          <!-- 项目打成jar，把本地jar包也引入进去 -->
-          <includeSystemScope>true</includeSystemScope>
-          <!--
-          不把相关的jar包打进最终的jar包里
-          要用的jar包已经实现上传到服务器了，运行这里打的jar包，指定好引用的jar路径参数：-Dloader.path=/.../lob
-           -->
-<!--          <includes>-->
-<!--            <include>-->
-<!--              <groupId>nothing</groupId>-->
-<!--              <artifactId>nothing</artifactId>-->
-<!--            </include>-->
-<!--          </includes>-->
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

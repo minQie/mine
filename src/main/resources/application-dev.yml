@@ -1,3 +1,0 @@
-spring:
-  pid:
-    file: target/application.pid

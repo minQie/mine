@@ -1,0 +1,59 @@
+server:
+  port: 8080
+
+spring:
+  pid:
+    file: application.pid
+#   # springboot的异步，是基于jdk的动态代理实现的，即基于接口，那么编写的类就不能使用接口了，所以修改默认的动态代理策略为CGLIB，即基于类，也可以在@EnableAsync注解上配置
+#  aop:
+#    proxy-target-class: true
+
+#  # 企业微信邮箱服务器
+#  mail:
+#    # SMTP服务器
+#    host: smtp.exmail.qq.com
+#    # SMTP服务器秘钥
+#    password: GfTzFAJ7aEcUqgbx
+#    # 邮件发送者的真实邮箱
+#    username: mincong.wang@firstouch.com.cn
+#    # 添加如下配置，即采用SMTPS协议发送邮件(465端口)，默认是SMTP协议(25端口)
+#    properties:
+#      mail:
+#        smtp:
+#          port: 465
+#          auth: true
+#          socketFactory:
+#            class: javax.net.ssl.SSLSocketFactory
+
+# dao配置
+mybatis-plus:
+  global-config:
+    db-config:
+      # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-field: deleted
+      # 逻辑未删除值(默认为 0)
+      logic-not-delete-value: 0
+      # 逻辑已删除值(默认为 1)
+      logic-delete-value: 1
+  configuration:
+    # 选用的日志实现框架 - slf4j
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  # 指定自定义类型处理器所在包
+  type-handlers-package: priv.wmc.config.mybatis.handler
+
+# 自定义配置
+app:
+  # 是否开启swagger
+  swagger-enable: true
+  # api 文档版本3
+  api-version: v1.0
+
+# 一方自定义模块
+module:
+  # 异常邮件通知
+  exception-mail-notify:
+    'on': false
+    # 邮件发送者的昵称
+    nickname: My Bug Reporter
+    # 发生预期外异常时，要通知的邮箱
+    send-to: mincong.wang@firstouch.com.cn
