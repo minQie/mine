@@ -1,6 +1,6 @@
 # Compiled file
 *.class
-/target/
+*/target/
 
 # Package file
 *.jar
