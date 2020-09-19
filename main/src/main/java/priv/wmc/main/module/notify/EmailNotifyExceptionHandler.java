@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import priv.wmc.main.module.exception.ApiBasicException;
 import priv.wmc.common.util.ExceptionStackTraceUtils;
+import priv.wmc.main.base.ApiException;
 
 /**
  * 当出现ApiException以外类型的异常，邮件提醒配置的后台开发人员
@@ -25,7 +25,7 @@ public class EmailNotifyExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Object handle(Exception e) {
         String stackTrace = ExceptionStackTraceUtils.getStackTrace(e);
-        if (!(e instanceof ApiBasicException)) {
+        if (!(e instanceof ApiException)) {
             mailNotifier.exceptionNotify(e, stackTrace);
         }
         return stackTrace;

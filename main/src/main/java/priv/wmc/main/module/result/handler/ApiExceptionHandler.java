@@ -1,14 +1,12 @@
-package priv.wmc.main.module.exception.handler;
+package priv.wmc.main.module.result.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import priv.wmc.main.module.exception.result.ApiBasicExceptionResult;
-import priv.wmc.main.module.exception.result.ApiExceptionResult;
-import priv.wmc.main.module.exception.ApiBasicException;
-import priv.wmc.main.module.exception.ApiException;
+import priv.wmc.main.base.CommonResult;
+import priv.wmc.main.base.ApiException;
 
 /**
  * <p>所有“@RestController”注解修饰的Controller的方法被调用时，抛出指定类型的异常时，将被以指定的方式处理
@@ -25,17 +23,9 @@ import priv.wmc.main.module.exception.ApiException;
 @RestControllerAdvice(annotations = RestController.class)
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(ApiBasicException.class)
-    public Object handle(ApiBasicException e) {
-        return new ApiBasicExceptionResult(e);
-    }
-
     @ExceptionHandler(ApiException.class)
     public Object handle(ApiException e) {
-        if (e.getExtraMessage() == null) {
-            return new ApiBasicExceptionResult(e);
-        }
-        return new ApiExceptionResult(e, e.getExtraMessage());
+        return new CommonResult<>(e, e.getExtraMessage());
     }
 
 }

@@ -12,7 +12,7 @@ layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'elemen
     //建立WebSocket通讯
     //注意：如果你要兼容ie8+，建议你采用 socket.io 的版本。下面是以原生WS为例
     if('WebSocket' in window){
-        var socket = new WebSocket('ws://localhost:8081/log');
+        var socket = new WebSocket('ws://localhost:8080/log');
     }else{
         layer.msg("您的浏览器不支持websocket!");
     }

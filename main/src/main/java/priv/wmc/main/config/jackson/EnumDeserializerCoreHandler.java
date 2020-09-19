@@ -6,8 +6,8 @@ import com.fasterxml.jackson.core.JsonStreamContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.util.ReflectionUtils;
-import priv.wmc.main.module.exception.ApiErrorCodes;
-import priv.wmc.main.module.exception.ApiException;
+import priv.wmc.main.base.ApiException;
+import priv.wmc.main.module.result.ApiErrorCodes;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

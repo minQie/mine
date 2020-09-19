@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Wang Mincong
  * @date 2020-08-17 11:23:03
  */
-@MapperScan("priv.wmc.mapper")
+@MapperScan("priv.wmc.main.mapper")
 @Configuration
 public class MybatisPlusConfig {
 

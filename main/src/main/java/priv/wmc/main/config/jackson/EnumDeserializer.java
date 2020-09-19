@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.jackson.JsonComponent;
+import priv.wmc.main.base.ApiException;
 import priv.wmc.main.base.enums.EnumDefine;
 import priv.wmc.common.util.RegexUtils;
-import priv.wmc.main.module.exception.ApiErrorCodes;
-import priv.wmc.main.module.exception.ApiException;
+import priv.wmc.main.module.result.ApiErrorCodes;
 
 /**
  * 自定义枚举反序列化器<br>

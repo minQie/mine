@@ -1,5 +1,7 @@
-package priv.wmc.main.module.exception.handler;
+package priv.wmc.main.module.result.handler;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -8,11 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import priv.wmc.main.module.exception.result.ApiExceptionResult;
-import priv.wmc.main.module.exception.result.HttpRequestMethodNotSupportedExceptionResult;
-import priv.wmc.main.module.exception.result.MethodArgumentTypeMismatchExceptionResult;
-import priv.wmc.main.module.exception.result.MissingServletRequestParameterExceptionResult;
-import priv.wmc.main.module.exception.ApiErrorCodes;
+import priv.wmc.common.util.HashCollectionUtils;
+import priv.wmc.main.base.CommonResult;
+import priv.wmc.main.module.result.ApiErrorCodes;
 
 /**
  * @author Wang Mincong
@@ -25,9 +25,9 @@ public class BasicExceptionHandler {
     /**
      * 需要请求体参数，但是请求体为空会匹配到该异常
      */
-    @ExceptionHandler({HttpMessageNotReadableException.class})
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public Object handle(HttpMessageNotReadableException ex) {
-        return new ApiExceptionResult(ApiErrorCodes.MESSAGE_NOT_READABLE, ex.getMessage());
+        return new CommonResult<>(ApiErrorCodes.MESSAGE_NOT_READABLE, ex.getMessage());
     }
 
     /**
@@ -35,7 +35,7 @@ public class BasicExceptionHandler {
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public Object handle(MissingServletRequestParameterException ex) {
-        return new MissingServletRequestParameterExceptionResult(ex);
+        return new CommonResult<>(ApiErrorCodes.PARAM_MISSING, ex.getParameterName());
     }
 
     /**
@@ -43,7 +43,11 @@ public class BasicExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public Object handle(HttpRequestMethodNotSupportedException ex) {
-        return new HttpRequestMethodNotSupportedExceptionResult(ex);
+        Map<String, Object> map = new HashMap<>(HashCollectionUtils.getAppropriateSize(2));
+        map.put("method", ex.getMethod());
+        map.put("supportedMethods", ex.getSupportedMethods());
+
+        return new CommonResult<>(ApiErrorCodes.METHOD_NOT_SUPPORTED, map);
     }
 
     /**
@@ -51,7 +55,11 @@ public class BasicExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public Object handle(MethodArgumentTypeMismatchException ex) {
-        return new MethodArgumentTypeMismatchExceptionResult(ex);
+        Map<String, Object> map = new HashMap<>(HashCollectionUtils.getAppropriateSize(2));
+        map.put("param", ex.getName());
+        map.put("cause", ex.getRootCause().getMessage());
+
+        return new CommonResult<>(ApiErrorCodes.PARAM_ERROR, map);
     }
 
 }

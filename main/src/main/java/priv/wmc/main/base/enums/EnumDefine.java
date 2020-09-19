@@ -2,8 +2,8 @@ package priv.wmc.main.base.enums;
 
 import priv.wmc.main.config.jackson.EnumDeserializer;
 import priv.wmc.main.config.jackson.EnumSerializer;
-import priv.wmc.main.module.exception.ApiErrorCodes;
-import priv.wmc.main.module.exception.ApiException;
+import priv.wmc.main.module.result.ApiErrorCodes;
+import priv.wmc.main.base.ApiException;
 
 /**
  * 枚举实现当前接口，会按照自定义的规则进行序列化和反序列化

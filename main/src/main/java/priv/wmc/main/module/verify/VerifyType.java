@@ -1,6 +1,6 @@
 package priv.wmc.main.module.verify;
 
-import priv.wmc.main.module.exception.ApiErrorCodes;
+import priv.wmc.main.module.result.ApiErrorCodes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
