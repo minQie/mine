@@ -1,7 +1,5 @@
 package priv.wmc.main.pojo.dto.result;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,22 +22,8 @@ public class ProvinceResultDTO {
      */
     String name;
 
-    /**
-     * 包含的市
-     */
-    List<CityResultDTO> cities;
-
-    /**
-     * 构造方法
-     *
-     * @param province province
-     */
     public ProvinceResultDTO(Province province) {
         BeanUtils.copyProperties(province, this);
-        this.name = province.getName();
-        if (province.getCities() != null) {
-            this.cities = province.getCities().stream().map(CityResultDTO::new).collect(Collectors.toList());
-        }
     }
 
 }

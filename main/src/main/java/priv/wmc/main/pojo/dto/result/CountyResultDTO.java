@@ -22,14 +22,8 @@ public class CountyResultDTO {
      */
     String name;
 
-    /**
-     * 构造方法
-     *
-     * @param county county
-     */
     public CountyResultDTO(County county) {
         BeanUtils.copyProperties(county, this);
-        this.name = county.getName();
     }
 
 }

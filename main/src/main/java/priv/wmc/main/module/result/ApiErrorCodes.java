@@ -1,4 +1,4 @@
-package priv.wmc.main.module.exception;
+package priv.wmc.main.module.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum ApiErrorCodes implements ApiError {
+public enum ApiErrorCodes implements ApiErrorInterface {
 
     /**
      * 后台代码层面

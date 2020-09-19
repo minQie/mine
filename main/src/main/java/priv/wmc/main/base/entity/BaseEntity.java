@@ -32,7 +32,7 @@ public abstract class BaseEntity<T extends Model<?>> extends Model<T> {
      * <p>ASSIGN_ID：当插入对象ID 为空，才自动填充，主键类型为number或string，默认的实现是雪花算法
      * <p>ASSIGN_UUID：当插入对象ID 为空，才自动填充，主键类型为String，UUID
      */
-    @TableId(type = IdType.INPUT)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import priv.wmc.main.service.TestService;
 import priv.wmc.main.service.TestForm;
+import priv.wmc.main.service.TestService;
 
 /**
  * @author 王敏聪
@@ -26,6 +26,10 @@ import priv.wmc.main.service.TestForm;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class TestController {
 
+    // 1、http协议
+    // 2、RabbitMQ
+    // 3、SpringCloud
+
     private final TestService testService;
 
     @GetMapping("/getEnum")
@@ -34,8 +38,9 @@ public class TestController {
     }
 
     @PostMapping("/postEnum")
-    public void postTest(@Valid @RequestBody TestForm testForm) {
+    public TestForm postTest(@Valid @RequestBody TestForm testForm) {
         log.info("post 方法执行...");
+        return testForm;
     }
 
     @GetMapping("/aopTest")

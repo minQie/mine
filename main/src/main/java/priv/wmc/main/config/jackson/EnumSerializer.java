@@ -3,6 +3,7 @@ package priv.wmc.main.config.jackson;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.springframework.boot.jackson.JsonComponent;
 import priv.wmc.main.base.enums.EnumDefine;
 import priv.wmc.common.constant.StaticConstants;
 
@@ -23,6 +24,7 @@ import java.io.IOException;
  *
  * @see StaticConstants
  */
+@JsonComponent
 public class EnumSerializer extends JsonSerializer<EnumDefine> {
 
     @Override

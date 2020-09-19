@@ -16,6 +16,7 @@
 # About IntelliJ
 *.iml
 /.idea/
+/.mvn/
 /out/
 
 # 开发者自定义本地配置文件

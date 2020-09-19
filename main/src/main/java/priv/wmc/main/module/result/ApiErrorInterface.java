@@ -1,4 +1,4 @@
-package priv.wmc.main.module.exception;
+package priv.wmc.main.module.result;
 
 /**
  * 错误相关的枚举都要实现的接口
@@ -6,7 +6,7 @@ package priv.wmc.main.module.exception;
  * @author 王敏聪
  * @date 2020-01-15 23:24:22
  */
-public interface ApiError {
+public interface ApiErrorInterface {
 
     /**
      * 返回错误码

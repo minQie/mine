@@ -7,25 +7,19 @@ import priv.wmc.main.base.entity.BaseEntity;
 /**
  * 区
  *
- * @author 王敏聪
- * @date 2019/12/13 13:40
+ * @author Wang Mincong
+ * @date 2020-09-18 11:12:29
  */
 @Getter
 @Setter
-//@Entity
-public class County extends BaseEntity<Province> {
+public class County extends BaseEntity<County> {
 
     /**
      * 名称
      */
-//    @Index(unique = true)
-//    @Column(length = 16, nullable = false)
     String name;
 
-    /**
-     * 所属的市
-     */
-//    @ManyToOne(optional = false)
-    City city;
+    /** 市id */
+    Long cityId;
 
 }
