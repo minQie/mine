@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
 
+    <contextName>core</contextName>
     <contextListener class="priv.wmc.main.module.log.LoggerStartupListener"/>
 
-    <contextName>core</contextName>
-
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-
     <springProperty scope="context" name="ENV" source="spring.profiles.active"/>
 
-    <property name="LOG_HOME" value="main/target/logs/${ENV}/" />
+    <property name="LOG_OUTPUT_LEVEL" value="INFO" />
+
+    <property name="NOT_ERROR_CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %clr(%-5p) | %cyan(%-40.40logger{39} %4L) | %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <property name="ERROR_CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %clr(%-5p) | %cyan(%-40.40logger{39} %4L) | %clr(%m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx})"/>
+
+    <property name="LOG_FILE" value="main/target/logs/${ENV}/today.log" />
+    <property name="FILE_LOG_PATTERN" value="%date [%level] [%thread] %logger{60} [%file : %line] %msg%n"/>
+
+    <property name="LOG_FILE_CLEAN_HISTORY_ON_START" value="false"/>
+    <property name="ROLLING_FILE_NAME_PATTERN" value="${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz}"/>
+    <property name="LOG_FILE_MAX_SIZE" value="10MB"/>
+    <property name="LOG_FILE_MAX_HISTORY" value="7"/>
+    <property name="LOG_FILE_TOTAL_SIZE_CAP" value="0"/>
+
+    <property name="ASYNC_FILE_DISCARDING_THRESHOLD" value="0"/>
+    <property name="ASYNC_FILE_QUEUE_SIZE" value="256"/>
 
     <appender name ="CONSOLE_NOT_ERROR" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -18,9 +31,7 @@
             <onMismatch>ACCEPT</onMismatch>
         </filter>
         <encoder>
-            <pattern>
-                %d{yyyy-MM-dd HH:mm:ss} %clr(%-5p) | %cyan(%-40.40logger{39} %4L) | %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
-            </pattern>
+            <pattern>${NOT_ERROR_CONSOLE_LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
@@ -32,39 +43,22 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>
-                %d{yyyy-MM-dd HH:mm:ss} %clr(%-5p) | %cyan(%-40.40logger{39} %4L) | %clr(%m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx})
-            </pattern>
+            <pattern>${ERROR_CONSOLE_LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOG_HOME}/today.log</File>
-        <encoder>
-            <pattern>%date [%level] [%thread] %logger{60} [%file : %line] %msg%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>2MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-    </appender>
-
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
     <appender name="ASYNC-FILE" class="ch.qos.logback.classic.AsyncAppender">
         <discardingThreshold>0</discardingThreshold>
         <queueSize>256</queueSize>
         <appender-ref ref="FILE"/>
     </appender>
 
-    <!-- 输出 mybatis 执行的sql -->
-    <logger name="priv.wmc.mapper" level="debug"/>
+    <logger name="priv.wmc.mapper" level="DEBUG"/>
     <logger name="springfox.documentation.spring.web" level="ERROR" />
 
-    <root level="INFO">
+    <root level="${LOG_OUTPUT_LEVEL}">
         <appender-ref ref="CONSOLE_NOT_ERROR"/>
         <appender-ref ref="CONSOLE_ERROR"/>
         <appender-ref ref="ASYNC-FILE"/>
