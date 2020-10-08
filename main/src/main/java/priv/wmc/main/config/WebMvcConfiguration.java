@@ -12,6 +12,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.http.HttpMethod;
@@ -37,6 +38,7 @@ import priv.wmc.main.web.filter.XssFilter;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
+    @Profile("dev")
     @Bean
     public DefaultPointcutAdvisor defaultPointcutAdvisor2() {
         DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor();
@@ -56,6 +58,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     /**
      * 注册过滤器
      */
+    @Profile("dev")
     @Bean
     public FilterRegistrationBean<XssFilter> someFilterRegistration() {
         FilterRegistrationBean<XssFilter> registrationBean = new FilterRegistrationBean<>();
