@@ -24,6 +24,12 @@ spring:
 #          auth: true
 #          socketFactory:
 #            class: javax.net.ssl.SSLSocketFactory
+  # 消息队列中间件
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+    virtual-host: hello
 
 # dao配置
 mybatis-plus:
@@ -40,6 +46,9 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   # 指定自定义类型处理器所在包
   type-handlers-package: priv.wmc.config.mybatis.handler
+
+# rabbitmq
+
 
 # 自定义配置
 app:
