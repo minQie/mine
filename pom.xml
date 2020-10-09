@@ -12,9 +12,9 @@
   </parent>
 
   <groupId>priv.wmc</groupId>
-  <artifactId>mine</artifactId>
+  <artifactId>java-web-learn</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>mine</name>
+  <name>java-web-learn</name>
   <description>总结一些学习到的项目中的模板</description>
 
   <modules>
