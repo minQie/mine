@@ -7,6 +7,9 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 /**
+ * RabbitListener 的 queuesToDeclare 属性是声明式，当指定名称的队列不存在时，会创建
+ * 而 queues 属性就是单纯的监听指定名称的队列，当指定名称的队列不存在时，会报错
+ *
  * @author Wang Mincong
  * @date 2020-10-01 15:09:29
  */
