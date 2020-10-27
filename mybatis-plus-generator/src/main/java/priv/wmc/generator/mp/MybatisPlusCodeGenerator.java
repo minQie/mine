@@ -15,7 +15,7 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import java.util.Arrays;
 import java.util.Scanner;
 import lombok.extern.slf4j.Slf4j;
-import priv.wmc.base.entity.BaseEntity;
+import priv.wmc.main.base.entity.BaseEntity;
 
 /**
  * Mybatis Plus code generator apply

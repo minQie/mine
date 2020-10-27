@@ -81,6 +81,8 @@ public class EmailSender implements MailNotifier {
     /**
      * 向指定的邮箱发送指定主题和内容的邮件
      *
+     * 关于 @SafeVarargs 的作用和说明示例见《Effective Java》
+     *
      * @param to                 邮箱
      * @param subject            主题
      * @param content            内容
