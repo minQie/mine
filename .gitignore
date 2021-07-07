@@ -27,3 +27,4 @@ application-custom*.yaml
 
 ### VS Code ###
 .vscode/
+temp.*
