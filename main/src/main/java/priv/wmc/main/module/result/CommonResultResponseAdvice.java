@@ -1,5 +1,7 @@
 package priv.wmc.main.module.result;
 
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -19,6 +21,8 @@ import priv.wmc.main.base.CommonResult;
 @SuppressWarnings("NullableProblems")
 public class CommonResultResponseAdvice implements ResponseBodyAdvice<Object> {
 
+
+
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
@@ -33,8 +37,13 @@ public class CommonResultResponseAdvice implements ResponseBodyAdvice<Object> {
         ServerHttpRequest request,
         ServerHttpResponse response) {
 
-        // 当 body 为 null，判断的结果为false
+        // 当 body 为 null，判断的结果为 false
         if (body instanceof CommonResult) {
+            return body;
+        }
+        // 当为 Swagger 请求时，不能进行统一结果的包装处理（也是遇到坑，查询官方文档了解到的）
+        List<String> swaggerUris = Arrays.asList("/swagger-resources", "/swagger-resources/configuration/ui", "/v2/api-docs");
+        if (swaggerUris.contains(request.getURI().getPath())) {
             return body;
         }
 
