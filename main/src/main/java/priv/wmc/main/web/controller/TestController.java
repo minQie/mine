@@ -1,6 +1,10 @@
 package priv.wmc.main.web.controller;
 
 import io.swagger.annotations.Api;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +30,9 @@ import priv.wmc.main.service.TestService;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class TestController {
 
-    // 1、http协议
-    // 2、RabbitMQ
-    // 3、SpringCloud
-
     private final TestService testService;
 
+    /** enum serialize and deserialize test */
     @GetMapping("/getEnum")
     public void getTest(@Valid TestForm testForm) {
         log.info("get 方法执行...");
@@ -43,9 +44,33 @@ public class TestController {
         return testForm;
     }
 
+    /** aop test */
     @GetMapping("/aopTest")
     public void test() {
         testService.aopTest("1", "2");
     }
 
+    /** 转发：原生 方式 */
+    @PostMapping("/tomcatDispatcher")
+    public void tomcatDispatcher(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("xxx").forward(request, response);
+    }
+
+    /** 转发：spring 方式 */
+    @PostMapping("/springDispatcher")
+    public String springDispatcher() {
+        return "forward:xxx";
+    }
+
+    /** 重定向：原生 方式 */
+    @GetMapping("/tomcatRedirect")
+    public void tomcatRedirect(HttpServletResponse response) throws IOException {
+        response.sendRedirect("xxx");
+    }
+
+    /** 重定向：spring 方式 */
+    @GetMapping("/springRedirect")
+    public String springRedirect() {
+        return "redirect:xxx";
+    }
 }
