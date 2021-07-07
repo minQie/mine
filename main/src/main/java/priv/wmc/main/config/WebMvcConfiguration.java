@@ -117,7 +117,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     }
 
     /**
-     * JSR303的校验器<br>
+     * JSR303校验器<br>
      */
     @Bean
     public Validator validator() {
@@ -131,7 +131,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     }
 
     /**
-     * Spring定时任务的开关<br>
+     * 定时任务开关<br>
      * @see SchedulingCondition
      */
     @Bean

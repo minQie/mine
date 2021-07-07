@@ -19,7 +19,6 @@ public class City extends BaseEntity<City> {
      */
     String name;
 
-
     /** 省id */
     Long provinceId;
 
